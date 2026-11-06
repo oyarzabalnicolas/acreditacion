@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Acreditación · Familia Agustiniana</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1D1B1A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Acreditación">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<meta name="robots" content="noindex">
+<script src="config.js"></script>
+<style>
+:root { --ink:#1D1B1A; --mut:#6b6560; --bg:#f6f2ec; --card:#fff; --line:#e4ddd3; --red:#B5121B; --redbg:#fbe9e9; --blue:#2f5f9e; --bluebg:#e8eff9;
+  --ok:#1d7a46; --okbg:#e3f3e9; --warn:#93580a; --warnbg:#fdf1d8; --lila:#6b3f8f; --lilabg:#f1e8f7; }
+* { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; }
+.wrap { max-width:560px; margin:0 auto; padding:0 14px 96px; }
+header { background:var(--ink); color:#fff; margin:0 -14px 10px; padding:12px 14px 10px; display:flex; gap:11px; align-items:center; border-bottom:4px solid var(--red); }
+header img { width:44px; height:44px; border-radius:50%; background:#fff; flex:none; }
+header h1 { font-size:15.5px; margin:0; line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+header .sub { font-size:12.5px; opacity:.8; }
+header .tt { flex:1; min-width:0; }
+.sync { font-size:11.5px; display:flex; gap:5px; align-items:center; opacity:.85; white-space:nowrap; }
+.dot { width:9px; height:9px; border-radius:50%; background:#9a948e; }
+.dot.on { background:#3ecf7c; } .dot.off { background:#ff5a5a; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:10px; }
+h2 { font-size:15px; margin:4px 0 8px; color:var(--mut); text-transform:uppercase; letter-spacing:.5px; }
+label { display:block; font-size:13.5px; color:var(--mut); margin:8px 0 4px; }
+input,select,textarea { width:100%; font:inherit; color:inherit; background:#fff; border:2px solid var(--line); border-radius:11px; padding:11px; }
+input:focus,select:focus,textarea:focus { outline:none; border-color:var(--ink); }
+button { font:inherit; font-weight:650; border:0; border-radius:12px; padding:14px; width:100%; background:var(--ink); color:#fff; margin-top:8px; cursor:pointer; }
+button.ok { background:var(--ok); font-size:19px; padding:17px; }
+button.rojo { background:var(--red); }
+button.sec { background:#fff; color:var(--ink); border:2px solid var(--ink); }
+button.gris { background:#fff; color:var(--mut); border:2px solid var(--line); font-weight:600; }
+button.chico { padding:9px 10px; font-size:14px; width:auto; margin:6px 6px 0 0; }
+button:disabled { opacity:.5; }
+.fila2 { display:flex; gap:8px; } .fila2 > * { flex:1; }
+.mut { color:var(--mut); font-size:14px; }
+.err { color:var(--red); font-size:14.5px; min-height:18px; margin-top:6px; }
+.hide { display:none !important; }
+.chip { display:inline-block; font-size:12.5px; font-weight:650; padding:3px 9px; border-radius:20px; margin:2px 4px 2px 0; background:#eee; color:#444; }
+.c-OAR { background:var(--redbg); color:var(--red); } .c-OSA { background:var(--bluebg); color:var(--blue); } .c-AM { background:var(--lilabg); color:var(--lila); }
+.c-menor { background:var(--warnbg); color:var(--warn); } .c-ok { background:var(--okbg); color:var(--ok); } .c-mesa { background:#ece7df; color:#5a534c; }
+.c-otra { background:var(--redbg); color:var(--red); }
+.nombre { font-size:25px; font-weight:750; line-height:1.15; margin:2px 0 6px; }
+.aviso { border-radius:11px; padding:10px 12px; margin-top:8px; font-size:15px; }
+.aviso b { display:block; font-size:11.5px; text-transform:uppercase; letter-spacing:.4px; margin-bottom:1px; }
+.a-salud { background:var(--redbg); color:#7d0d12; } .a-ok { background:var(--okbg); color:var(--ok); } .a-warn { background:var(--warnbg); color:var(--warn); }
+.a-menor { background:#fff7e6; border:2px solid #f0c36a; color:#5c3d00; }
+.contacto { display:flex; align-items:center; gap:8px; padding:8px 0; border-top:1px solid var(--line); }
+.contacto:first-of-type { border-top:0; }
+.contacto .q { flex:1; min-width:0; font-size:15px; }
+.contacto a { text-decoration:none; font-weight:700; font-size:14px; padding:9px 11px; border-radius:10px; white-space:nowrap; }
+a.tel { background:var(--okbg); color:var(--ok); } a.wa { background:#25D366; color:#fff; }
+dl { margin:0; display:grid; grid-template-columns:auto 1fr; gap:4px 12px; font-size:14.5px; }
+dt { color:var(--mut); } dd { margin:0; word-break:break-word; }
+.res .fila { display:flex; align-items:center; gap:8px; padding:11px 4px; border-bottom:1px solid var(--line); cursor:pointer; }
+.res .fila:last-child { border-bottom:0; }
+.res .nm { flex:1; min-width:0; } .res .nm small { display:block; color:var(--mut); font-size:12.5px; }
+.marca { width:26px; height:26px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800; }
+.m-si { background:var(--ok); color:#fff; } .m-no { background:#ebe5dc; color:#aaa; }
+.tabs { display:flex; gap:6px; margin-bottom:8px; }
+.tabs button { margin:0; padding:10px 4px; font-size:14px; background:#fff; color:var(--mut); border:2px solid var(--line); }
+.tabs button.act { background:var(--ink); color:#fff; border-color:var(--ink); }
+.big { font-size:34px; font-weight:800; line-height:1; } .big small { font-size:15px; font-weight:600; color:var(--mut); }
+.bar { height:10px; background:#ebe5dc; border-radius:6px; overflow:hidden; margin-top:6px; }
+.bar i { display:block; height:100%; background:var(--ok); }
+.grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.kpi { background:#faf8f5; border:1px solid var(--line); border-radius:11px; padding:9px; text-align:center; }
+.kpi b { display:block; font-size:22px; } .kpi span { font-size:12px; color:var(--mut); }
+.barras { display:flex; align-items:flex-end; gap:3px; height:90px; margin-top:8px; }
+.barras div { flex:1; background:var(--red); border-radius:3px 3px 0 0; min-height:2px; position:relative; }
+.barras-x { display:flex; gap:3px; font-size:10px; color:var(--mut); } .barras-x span { flex:1; text-align:center; overflow:hidden; }
+table { width:100%; border-collapse:collapse; font-size:14px; } td,th { padding:6px 4px; border-bottom:1px solid var(--line); text-align:left; } th { color:var(--mut); font-weight:600; }
+td.n,th.n { text-align:right; }
+nav { position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid var(--line); display:flex; padding:6px 6px calc(6px + env(safe-area-inset-bottom)); z-index:5; }
+nav button { margin:0; min-width:0; background:none; color:var(--mut); padding:8px 2px; font-size:12px; font-weight:650; border-radius:10px; }
+nav button.act { color:var(--red); background:var(--redbg); }
+nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
+.estampa img { width:100%; border-radius:14px; display:block; box-shadow:0 2px 12px rgba(0,0,0,.15); }
+.pie { text-align:center; margin-top:16px; } .pie img { max-width:220px; opacity:.85; }
+.roles { display:grid; gap:8px; } .roles button { margin:0; text-align:left; background:#fff; color:var(--ink); border:2px solid var(--line); padding:14px; }
+.roles button b { display:block; font-size:17px; } .roles button span { font-size:13px; color:var(--mut); font-weight:500; }
+.roles button.act { border-color:var(--red); background:var(--redbg); }
+.kitfila { display:flex; gap:8px; align-items:center; padding:9px 0; border-top:1px solid var(--line); flex-wrap:wrap; } .kitfila:first-of-type { border-top:0; }
+.kitfila .q { flex:1; min-width:140px; } .kitfila select { width:auto; padding:8px; } .kitfila button { width:auto; margin:0; padding:9px 12px; font-size:14px; }
+.check { display:flex; align-items:center; gap:10px; padding:8px 0; font-size:15px; } .check input { width:22px; height:22px; flex:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <img src="logo.png" alt="">
+  <div class="tt"><h1>Encuentro Familia Agustiniana</h1><div class="sub">Acreditación · 8 de noviembre</div></div>
+  <img src="cruz.png" alt="" style="width:24px;height:auto;border-radius:0;background:none">
+  <div class="sync"><span id="syncTxt">…</span><span class="dot" id="dot"></span></div>
+</header>
+
+<!-- INGRESO -->
+<section id="vLogin" class="hide">
+  <div class="card">
+    <label for="quien">Tu nombre</label>
+    <input id="quien" autocomplete="off" placeholder="Queda anotado en cada registro">
+    <label>¿Qué vas a hacer?</label>
+    <div class="roles">
+      <button data-rol="acr"><b>Acreditación</b><span>Mesa de recepción: presente, credencial, menores</span></button>
+      <button data-rol="kit"><b>Kits</b><span>Cobro en efectivo y entrega de kits</span></button>
+      <button data-rol="ctl"><b>Consulta y control</b><span>Panel, búsqueda, contactos e inscripción</span></button>
+    </div>
+    <div id="mesaBox" class="hide"><label>Mesa</label><div class="tabs" id="mesaBtns"></div></div>
+    <div id="pinBox"><label for="pin">Clave</label><input id="pin" type="tel" inputmode="numeric" autocomplete="off"></div>
+    <button id="bLogin">Entrar</button>
+    <div class="err" id="eLogin"></div>
+  </div>
+  <div class="pie"><img src="agustinosconelpapa.png" alt="agustinosconelpapa.com" style="max-width:150px"><br><img src="cruz.png" alt="" style="max-width:70px;margin-top:14px"></div>
+</section>
+
+<!-- INICIO -->
+<section id="vHome" class="hide">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+      <div><div class="big"><span id="hOk">0</span> <small id="hTot">de 0</small></div><div class="mut" id="hMesa"></div></div>
+      <a href="#" id="bCambiar" class="mut">cambiar</a>
+    </div>
+    <div class="bar"><i id="hBar" style="width:0"></i></div>
+    <div class="mut" id="hPend" style="margin-top:6px"></div>
+  </div>
+  <div class="card">
+    <input id="q" placeholder="Buscar por apellido, nombre o DNI" autocomplete="off" autocorrect="off" spellcheck="false">
+    <div id="res" class="res"></div>
+  </div>
+  <div class="pie mut" id="hQuien"></div>
+</section>
+
+<!-- FICHA -->
+<section id="vFicha" class="hide">
+  <div class="card">
+    <div id="fChips"></div>
+    <div class="nombre" id="fNom"></div>
+    <div id="fAvisos"></div>
+  </div>
+  <div id="fMenor" class="card a-menor hide"></div>
+  <div class="card" id="fAcred"></div>
+  <div class="card" id="fKit"></div>
+  <div class="card" id="fDatos"></div>
+  <div class="card hide" id="fHijos"></div>
+  <button class="gris" id="bVolver">Volver</button>
+  <div class="err" id="eFicha"></div>
+</section>
+
+<!-- LISTA -->
+<section id="vLista" class="hide">
+  <div class="tabs"><button data-t="faltan" id="tF"></button><button data-t="ok" id="tO"></button></div>
+  <input id="lq" placeholder="Filtrar" autocomplete="off">
+  <div class="card res" id="lista" style="margin-top:8px"></div>
+</section>
+
+<!-- ESPERA KITS -->
+<section id="vEspera" class="hide">
+  <div class="card"><div class="big"><span id="kEsp">0</span> <small>esperando su kit</small></div><div class="mut" id="kEspInfo"></div></div>
+  <div class="card res" id="espera"></div>
+  <div class="card" id="kTalles"></div>
+</section>
+
+<!-- PUERTA -->
+<section id="vPuerta" class="hide">
+  <div class="card">
+    <h2>Inscripción en el momento</h2>
+    <div class="fila2"><div><label>Apellido *</label><input id="iAp"></div><div><label>Nombres *</label><input id="iNom"></div></div>
+    <div class="fila2"><div><label>DNI</label><input id="iDni" type="tel" inputmode="numeric"></div><div><label>Edad</label><input id="iEdad" type="tel" inputmode="numeric"></div></div>
+    <label>Teléfono</label><input id="iTel" type="tel">
+    <label>Rama</label>
+    <select id="iRama"><option value="OAR">Agustinos Recoletos (OAR)</option><option value="OSA">Orden de San Agustín (OSA)</option><option value="Agustinas Misioneras">Agustinas Misioneras</option><option value="">Otra / no sabe</option></select>
+    <label>Parroquia / colegio</label><input id="iPar">
+    <label>Provincia</label><input id="iProv">
+    <div id="iMenorBox" class="hide">
+      <label>Adulto responsable (buscar entre los inscriptos)</label>
+      <input id="iPadreQ" placeholder="Apellido del padre o la madre" autocomplete="off">
+      <div id="iPadreRes" class="res"></div>
+      <div id="iPadres" class="mut"></div>
+    </div>
+    <div class="fila2"><div><label>Contacto de emergencia</label><input id="iEme"></div><div><label>Su teléfono</label><input id="iEmeTel" type="tel"></div></div>
+    <label>Salud / condición a tener en cuenta</label><input id="iSalud">
+    <label class="check"><input type="checkbox" id="iAcr" checked> Acreditar ahora (se le entrega la credencial)</label>
+    <div class="mut">Quien se inscribe hoy no tiene derecho a kit.</div>
+    <button class="ok" id="bInscribir">Inscribir</button>
+    <div class="err" id="ePuerta"></div>
+  </div>
+</section>
+
+<!-- PANEL -->
+<section id="vPanel" class="hide"><div id="panel"></div></section>
+
+<!-- ESTAMPA -->
+<section id="vEstampa" class="hide estampa">
+  <div class="tabs"><button id="eF" class="act">Imagen</button><button id="eO">Oración</button></div>
+  <img id="eImg" src="estampa-1.jpg" alt="Estampa del encuentro">
+</section>
+
+<!-- ADMIN -->
+<section id="vAdmin" class="hide">
+  <div class="card">
+    <h2>Kit: fecha tope</h2>
+    <label>Último día de inscripción con derecho a kit</label>
+    <input id="aTope" type="date">
+    <label class="check"><input type="checkbox" id="aSinFecha"> <span id="aSinFechaTxt"></span></label>
+    <h2 style="margin-top:14px">Mesas</h2>
+    <label>Reparto por inicial del apellido (separado por comas)</label>
+    <input id="aMesas" placeholder="A-F,G-M,N-Z">
+    <div class="mut" id="aMesasInfo"></div>
+    <button id="bGuardar">Guardar configuración</button>
+    <div class="err" id="eAdmin"></div>
+  </div>
+  <div class="card">
+    <h2>Lista de inscriptos</h2>
+    <div class="mut" id="aBase"></div>
+    <button class="sec" id="bImportar">Importar lista actualizada</button>
+    <div class="err" id="eImp"></div>
+  </div>
+  <div class="card">
+    <h2>Pruebas</h2>
+    <div class="mut">Borra acreditaciones, pagos, entregas e inscripciones en puerta. Queda una copia de respaldo en la planilla.</div>
+    <button class="rojo" id="bReset">Reiniciar todo a cero</button>
+  </div>
+  <button class="gris" id="bSalir">Cerrar sesión en este celular</button>
+</section>
+</div>
+
+<nav id="nav" class="hide">
+  <button data-v="vEspera" data-roles="kit ctl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h16v12H4zM8 8V5h8v3M4 12h16"/></svg>En espera</button>
+  <button data-v="vHome" data-roles="acr kit ctl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Buscar</button>
+  <button data-v="vLista" data-roles="acr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>Mi mesa</button>
+  <button data-v="vPuerta" data-roles="acr ctl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="8" r="4"/><path d="M3 20c0-4 3-6 7-6M18 13v6M15 16h6"/></svg>Inscribir</button>
+  <button data-v="vPanel" data-roles="ctl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Panel</button>
+  <button data-v="vEstampa" data-roles="acr kit ctl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z"/></svg>Estampa</button>
+  <button data-v="vAdmin" id="navAdmin" data-roles="admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg>Ajustes</button>
+</nav>
+
+<script>
+(function () {
+  'use strict';
+  var API = window.API_URL || '';
+  var P = [], byId = {}, E = {}, R = {}, cfg = {}, version = '', admin = false, editResp = false, respSel = [];
+  var pin = '', quien = '', mesa = 0, rol = 'acr', cola = [], actual = null, tab = 'faltan', pila = [];
+  var enviando = false, consultando = false;
+  var TALLES = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+
+  function $(id) { return document.getElementById(id); }
+  function lsG(k) { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } }
+  function lsS(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function norm(s) { return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim(); }
+  function ahoraTxt() { var d = new Date(), z = function (n) { return ('0' + n).slice(-2); }; return d.getFullYear() + '-' + z(d.getMonth() + 1) + '-' + z(d.getDate()) + ' ' + z(d.getHours()) + ':' + z(d.getMinutes()) + ':' + z(d.getSeconds()); }
+  function hh(s) { return s ? String(s).slice(11, 16) : ''; }
+  function fecha(s) { return s ? new Date(String(s).replace(' ', 'T')) : null; }
+  function digitos(s) { return String(s || '').replace(/\D/g, ''); }
+  function wa(v) {
+    var d = digitos(v).replace(/^0+/, '');
+    if (!d) return '';
+    if (/^549\d{10}$/.test(d)) return d;
+    if (/^54\d{10}$/.test(d)) return '549' + d.slice(2);
+    if (d.length === 12) { for (var a = 2; a <= 4; a++) if (d.substr(a, 2) === '15') { d = d.slice(0, a) + d.slice(a + 2); break; } }
+    if (d.length === 10 && d.indexOf('15') === 0) d = '11' + d.slice(2);
+    if (d.length === 8) d = '11' + d;
+    return d.length === 10 ? '549' + d : '';
+  }
+  function sync(e, t) { $('dot').className = 'dot ' + e; $('syncTxt').textContent = t; }
+
+  /* ---------- servidor ---------- */
+  function srv(fn, args, ok, fail, espera) {
+    var req = { fn: fn, args: args }, n = 0;
+    var mal = function (e) { sync('off', 'sin conexión'); if (fail) fail(e); };
+    var ir = function () {
+      var ac = window.AbortController ? new AbortController() : null, t = setTimeout(function () { if (ac) ac.abort(); }, espera || 12000);
+      fetch(API, { method: 'POST', body: JSON.stringify(req), redirect: 'follow', credentials: 'omit', signal: ac ? ac.signal : undefined })
+        .then(function (r) { return r.json(); })
+        .then(function (x) { if (x && x.error === 'fallo') throw new Error(x.detalle || 'fallo'); return x; })
+        .then(function (x) { clearTimeout(t); ok(x); }, function (e) { clearTimeout(t); if (++n < 3) setTimeout(ir, 1200); else mal(e); });
+    };
+    ir();
+  }
+  function errClave(res) {
+    if (res && (res.error === 'pin' || res.error === 'bloqueo')) {
+      pin = ''; lsS('pin', ''); llenarMesas(); $('eLogin').textContent = res.error === 'bloqueo' ? 'Demasiados intentos. Esperá 5 minutos.' : 'Clave incorrecta.';
+      ver('vLogin'); return true;
+    }
+    return false;
+  }
+  function recibirEstado(res) {
+    if (!res || errClave(res)) return;
+    E = res.estado || {}; R = res.resp || {}; cfg = res.config || cfg; admin = !!res.admin;
+    indexarHijos();
+    aplicarCola();
+    sync('on', res.hora ? res.hora.slice(0, 5) : 'ok');
+    navRoles();
+    if (res.v && res.v !== version && !res.personas) { cargarBase(); }
+    refrescar();
+  }
+  function recibirBase(res) {
+    if (!res || errClave(res)) return;
+    P = res.personas || []; version = res.v;
+    try { lsS('base', JSON.stringify({ v: version, P: P })); } catch (e) {}
+    indexar(); recibirEstado(res);
+  }
+  function cargarBase(cb) { srv('base', [pin], function (r) { recibirBase(r); if (cb) cb(r); }, function () { if (cb) cb(null); }, 30000); }
+
+  /* ---------- datos ---------- */
+  function rangos() {
+    return String(cfg.mesas || 'A-F,G-M,N-Z').split(',').map(function (r) {
+      var m = norm(r).replace(/ /g, '').match(/^([a-z])-?([a-z])?$/); return m ? [m[1], m[2] || m[1]] : null;
+    }).filter(Boolean);
+  }
+  function mesaDe(p) {
+    var l = (norm(p.ap) || 'z')[0], R = rangos();
+    for (var i = 0; i < R.length; i++) if (l >= R[i][0] && l <= R[i][1]) return i + 1;
+    return R.length || 1;
+  }
+  function etiquetaMesa(i) { var R = rangos(); return i && R[i - 1] ? 'Mesa ' + i + ' · ' + R[i - 1][0].toUpperCase() + '–' + R[i - 1][1].toUpperCase() : 'Organización (todas)'; }
+  function indexar() {
+    byId = {};
+    P.forEach(function (p) { byId[p.id] = p; p.hijos = []; p.q = norm(p.ap + ' ' + p.nom + ' ' + p.dni); if (!p.telWa) p.telWa = wa(p.tel); if (!p.emeWa) p.emeWa = wa(p.emeTel); });
+    P.forEach(function (p) { p.mesa = mesaDe(p); });
+    indexarHijos();
+  }
+  function confirmados(p) { return R[p.id] && R[p.id].length ? R[p.id] : null; }
+  function respDe(p) { return confirmados(p) || p.padres || []; }
+  function indexarHijos() {
+    P.forEach(function (p) { p.hijos = []; });
+    P.forEach(function (p) { if (p.menor) respDe(p).forEach(function (id) { if (byId[id] && byId[id].hijos.indexOf(p.id) < 0) byId[id].hijos.push(p.id); }); });
+  }
+  function vacio() { return [0, '', '', '', 0, '', '', 0, '', '', '', 0, '', 0, '']; }
+  function est(p) { return E[p.id] || vacio(); }
+  function pendienteKit(p) { var k = kit(p).k; return k === 'debe' || k === 'pag'; }
+  function acreditado(p) { return !!est(p)[0]; }
+  function habil(p) {
+    if (p.puerta) return false;
+    if (!p.marca || p.sinFecha) return cfg.sinFechaAntes !== 'NO';
+    if (!cfg.fechaTope) return true;
+    return String(p.marca).slice(0, 10) <= cfg.fechaTope;
+  }
+  function kit(p) {
+    var e = est(p);
+    if (e[7]) return { k: 'ent', t: 'Kit entregado', d: 'Talle ' + (e[10] || '¿?') + ' · ' + hh(e[8]) + ' por ' + e[9] };
+    if (p.menor && p.kit !== 'P' && !e[4]) return { k: 'na', t: 'Menor · no lleva kit' };
+    if (p.kit === 'P') return { k: 'pag', t: 'Kit pagado' };
+    if (e[4]) return { k: 'pag', t: 'Kit pagado en el lugar', d: hh(e[5]) + ' · cobró ' + e[6] };
+    if (p.kit === 'NO') return { k: 'no', t: 'No quiere el kit', hab: habil(p) };
+    if (!habil(p) && e[13]) return { k: 'debe', t: 'Debe el kit · paga en el lugar', d: 'Habilitado por excepción (' + String(e[14]).split(' · ')[0] + ')', exc: true };
+    return habil(p) ? { k: 'debe', t: 'Debe el kit · paga en el lugar' } : { k: 'inh', t: p.puerta ? 'Sin kit · inscripto hoy' : (!p.marca || p.sinFecha) ? 'Sin kit · no tiene fecha de inscripción' : 'Sin kit · se inscribió después de la fecha tope' };
+  }
+  function familia(p) {
+    var ids = {};
+    if (p.menor) respDe(p).forEach(function (id) { ids[id] = 1; if (byId[id]) byId[id].hijos.forEach(function (h) { ids[h] = 1; }); });
+    p.hijos.forEach(function (h) { ids[h] = 1; });
+    delete ids[p.id];
+    return Object.keys(ids).map(function (id) { return byId[id]; }).filter(Boolean);
+  }
+
+  /* ---------- cola de envío ---------- */
+  function aplicarCola() {
+    cola.forEach(function (it) {
+      if (it.fn === 'inscribir') { var np = it.args[0]; if (!byId[np.id]) { np.puerta = true; P.push(np); indexar(); } return; }
+      var tipo = it.args[0], ids = it.args[1], datos = it.args[2] || {};
+      if (tipo === 'responsables') { ids.forEach(function (id) { R[id] = (datos.resp || []).slice(0, 2); }); indexarHijos(); return; }
+      ids.forEach(function (id) {
+        var e = (E[id] || vacio()).slice();
+        if (tipo === 'acreditar' && !e[0]) { e[0] = 1; e[1] = it.args[5]; e[2] = it.args[3]; e[3] = it.args[4]; }
+        if (tipo === 'desacreditar') { e[0] = 0; e[1] = e[2] = e[3] = ''; }
+        if (tipo === 'pagar' && !e[4]) { e[4] = 1; e[5] = it.args[5]; e[6] = it.args[3]; }
+        if (tipo === 'despagar') { e[4] = 0; e[5] = e[6] = ''; }
+        if (tipo === 'entregar' && !e[7]) { e[7] = 1; e[8] = it.args[5]; e[9] = it.args[3]; e[10] = datos.talle || ''; }
+        if (tipo === 'desentregar') { e[7] = 0; e[8] = e[9] = e[10] = ''; }
+        if (tipo === 'derivar' && !e[11]) { e[11] = 1; e[12] = it.args[5]; }
+        if (tipo === 'desderivar') { e[11] = 0; e[12] = ''; }
+        if (tipo === 'habilitar' && !e[13]) { e[13] = 1; e[14] = it.args[3] + ' · ' + it.args[5]; }
+        if (tipo === 'deshabilitar') { e[13] = 0; e[14] = ''; }
+        E[id] = e;
+      });
+    });
+  }
+  function encolar(fn, args) {
+    cola.push({ fn: fn, args: args }); lsS('cola', JSON.stringify(cola));
+    aplicarCola(); refrescar(); enviarCola();
+  }
+  function accion(tipo, ids, datos) { encolar('accion', [tipo, ids, datos || {}, quien, etiquetaMesa(mesa), ahoraTxt()]); }
+  function enviarCola() {
+    if (enviando || !cola.length) return;
+    enviando = true;
+    var it = cola[0];
+    srv(it.fn, [pin].concat(it.args), function (res) {
+      enviando = false;
+      if (!res || res.error) { errClave(res); return; }
+      cola.shift(); lsS('cola', JSON.stringify(cola));
+      if (it.fn === 'inscribir' && res.v !== version) { cargarBase(); }
+      recibirEstado(res); enviarCola();
+    }, function () { enviando = false; refrescar(); });
+  }
+
+  /* ---------- vistas ---------- */
+  var vistaActual = '';
+  function ver(v) {
+    ['vLogin', 'vHome', 'vFicha', 'vLista', 'vEspera', 'vPuerta', 'vPanel', 'vEstampa', 'vAdmin'].forEach(function (x) { $(x).classList.toggle('hide', x !== v); });
+    $('nav').classList.toggle('hide', v === 'vLogin');
+    [].forEach.call(document.querySelectorAll('nav button'), function (b) { b.classList.toggle('act', b.getAttribute('data-v') === v); });
+    vistaActual = v; window.scrollTo(0, 0); refrescar();
+  }
+  function refrescar() {
+    if (!P.length && vistaActual !== 'vLogin') { $('res').innerHTML = '<div class="mut" style="padding:10px">Cargando la lista…</div>'; }
+    pintarHome();
+    if (vistaActual === 'vFicha' && actual) pintarFicha();
+    if (vistaActual === 'vLista') pintarLista();
+    if (vistaActual === 'vPanel') pintarPanel();
+    if (vistaActual === 'vAdmin') pintarAdmin();
+    if (vistaActual === 'vEspera') pintarEspera();
+  }
+  function navRoles() {
+    [].forEach.call(document.querySelectorAll('nav button'), function (b) {
+      var r = (b.getAttribute('data-roles') || '').split(' ');
+      b.classList.toggle('hide', !(r.indexOf(rol) >= 0 || (admin && r.indexOf('admin') >= 0)));
+    });
+  }
+  function rolTxt() { return rol === 'kit' ? 'Mesa de kits' : rol === 'ctl' ? 'Consulta y control' : etiquetaMesa(mesa); }
+  function enEspera() { return P.filter(function (p) { var e = est(p); return e[11] && !e[7]; }).sort(function (a, b) { return est(a)[12] < est(b)[12] ? -1 : 1; }); }
+  function pintarEspera() {
+    var L = enEspera(), now = new Date();
+    $('kEsp').textContent = L.length;
+    var ent = P.filter(function (p) { return est(p)[7]; }).length;
+    $('kEspInfo').textContent = ent + ' kits entregados en total. Tocá a la persona para cobrar o entregar.';
+    $('espera').innerHTML = L.map(function (p) {
+      var k = kit(p), min = Math.max(0, Math.round((now - fecha(est(p)[12])) / 60000));
+      return filaHTML(p, '<span class="chip ' + (k.k === 'debe' ? 'c-otra">Debe' : 'c-ok">Pagado') + '</span><span class="mut">' + (p.talle || '¿talle?') + ' · ' + min + "'</span>");
+    }).join('') || '<div class="mut">Nadie esperando.</div>';
+    var porT = {};
+    P.forEach(function (p) { if (kit(p).k === 'pag') { var t = p.talle || 'sin talle'; porT[t] = (porT[t] || 0) + 1; } });
+    var tk = TALLES.concat(['sin talle']).filter(function (x) { return porT[x]; });
+    $('kTalles').innerHTML = '<h2>Pagados sin entregar, por talle</h2>' + (tk.length ? '<table>' + tk.map(function (x) { return '<tr><td>' + x + '</td><td class="n">' + porT[x] + '</td></tr>'; }).join('') + '</table>' : '<div class="mut">Ninguno.</div>');
+  }
+  function deMesa(p) { return rol !== 'acr' || !mesa || p.mesa === mesa; }
+  function pintarHome() {
+    var tot = 0, ok = 0;
+    P.forEach(function (p) { if (deMesa(p)) { tot++; if (acreditado(p)) ok++; } });
+    $('hOk').textContent = ok; $('hTot').textContent = 'de ' + tot + ' acreditados';
+    $('hMesa').textContent = rolTxt() + (rol === 'kit' ? ' · ' + enEspera().length + ' esperando kit' : '');
+    $('hBar').style.width = (tot ? Math.round(ok * 100 / tot) : 0) + '%';
+    $('hPend').textContent = cola.length ? cola.length + ' cambio(s) guardados en este celular, enviándose…' : '';
+    $('hQuien').textContent = quien ? 'Registrando como ' + quien : '';
+    if (vistaActual === 'vHome') buscar();
+  }
+  function filaHTML(p, extra) {
+    var e = est(p), ch = '';
+    if (p.menor) ch += '<span class="chip c-menor">Menor</span>';
+    if (rol === 'acr' && mesa && p.mesa !== mesa) ch += '<span class="chip c-otra">Mesa ' + p.mesa + '</span>';
+    return '<div class="fila" data-id="' + esc(p.id) + '"><span class="marca ' + (e[0] ? 'm-si">✓' : 'm-no">·') + '</span><div class="nm"><b>' + esc(p.ap) + '</b>, ' + esc(p.nom) +
+      '<small>' + esc([p.parroquia, p.dni ? 'DNI ' + p.dni : ''].filter(Boolean).join(' · ')) + '</small></div>' + ch + (extra || '') + '</div>';
+  }
+  function buscar() {
+    var q = norm($('q').value);
+    if (!q) { $('res').innerHTML = P.length ? '<div class="mut" style="padding:8px 2px">Escribí al menos 2 letras del apellido o el nombre.</div>' : ''; return; }
+    if (q.length < 2 && !/^\d/.test(q)) return;
+    var toks = q.split(' ');
+    var L = P.filter(function (p) { return toks.every(function (t) { return p.q.indexOf(t) >= 0; }); });
+    L.sort(function (a, b) { return (deMesa(b) - deMesa(a)) || a.q.localeCompare(b.q); });
+    $('res').innerHTML = L.slice(0, 40).map(function (p) { return filaHTML(p); }).join('') || '<div class="mut" style="padding:8px 2px">No encontré a nadie. Si no está inscripto, usá <b>Inscribir</b>.</div>';
+  }
+  function abrir(id) {
+    var p = byId[id]; if (!p) return;
+    if (vistaActual === 'vFicha' && actual && actual.id !== id) pila.push(actual.id);
+    else if (vistaActual !== 'vFicha') pila = [];
+    actual = p; confDesh = ''; editResp = false; respSel = []; $('eFicha').textContent = '';
+    ver('vFicha');
+  }
+  function contacto(nombre, rol, tel, w) {
+    var t = digitos(tel);
+    return '<div class="contacto"><div class="q"><b>' + esc(nombre) + '</b>' + (rol ? '<div class="mut">' + esc(rol) + '</div>' : '') + (tel ? '<div class="mut">' + esc(tel) + '</div>' : '<div class="mut">sin teléfono</div>') + '</div>' +
+      (t ? '<a class="tel" href="tel:' + t + '">Llamar</a>' : '') + (w ? '<a class="wa" href="https://wa.me/' + w + '" target="_blank" rel="noopener">WhatsApp</a>' : '') + '</div>';
+  }
+  var confDesh = '';
+  function pintarFicha() {
+    var p = actual = byId[actual.id] || actual, e = est(p), k = kit(p);
+    var chips = '';
+    var rc = p.rama === 'OAR' ? 'c-OAR' : p.rama === 'OSA' ? 'c-OSA' : p.rama ? 'c-AM' : '';
+    if (p.rama) chips += '<span class="chip ' + rc + '">' + esc(p.rama) + '</span>';
+    if (p.menor) chips += '<span class="chip c-menor">Menor' + (p.edad != null ? ' · ' + p.edad + ' años' : '') + '</span>';
+    else if (p.edad != null) chips += '<span class="chip">' + p.edad + ' años</span>';
+    chips += '<span class="chip ' + (rol === 'acr' && mesa && p.mesa !== mesa ? 'c-otra' : 'c-mesa') + '">Mesa ' + p.mesa + '</span>';
+    if (p.puerta) chips += '<span class="chip">Inscripto hoy</span>';
+    $('fChips').innerHTML = chips;
+    $('fNom').textContent = p.ap + ', ' + p.nom;
+    var av = '';
+    if (rol === 'acr' && mesa && p.mesa !== mesa) av += '<div class="aviso a-warn"><b>Otra mesa</b>Le corresponde la ' + etiquetaMesa(p.mesa) + '. Podés acreditarlo igual.</div>';
+    if (p.salud) av += '<div class="aviso a-salud"><b>Salud / condición</b>' + esc(p.salud) + '</div>';
+    $('fAvisos').innerHTML = av;
+
+    // menor: contactos de los padres
+    if (p.menor) {
+      var conf = confirmados(p), h = '';
+      if (conf && !editResp) {
+        h += '<h2>Responsables</h2>';
+        conf.map(function (id) { return byId[id]; }).filter(Boolean).forEach(function (q) { h += contacto(q.ap + ', ' + q.nom, 'Responsable confirmado' + (acreditado(q) ? ' · acreditado' : ''), q.tel, q.telWa); });
+        h += '<button class="chico gris" id="bCambiarResp">Cambiar responsables</button>';
+      } else {
+        if (!editResp) respSel = [];
+        h += '<h2>¿Quién es responsable? (hasta 2)</h2><div class="mut">Preguntale a la familia y marcá quién queda como contacto mientras el menor está en el encuentro.</div>';
+        var sug = {};
+        (p.padres || []).concat(conf || []).concat(respSel).forEach(function (id) { if (byId[id]) sug[id] = 1; });
+        Object.keys(sug).forEach(function (id) {
+          var q = byId[id];
+          h += '<label class="check"><input type="checkbox" class="respchk" value="' + esc(id) + '"' + (respSel.indexOf(id) >= 0 ? ' checked' : '') + '> <span><b>' + esc(q.ap + ', ' + q.nom) + '</b><br><span class="mut">' + esc(q.tel || 'sin teléfono') + ((p.padres || []).indexOf(id) >= 0 ? ' · sugerido por apellido' : '') + '</span></span></label>';
+        });
+        h += '<input id="respQ" placeholder="Buscar a otro adulto (cualquier apellido)" autocomplete="off" style="margin-top:6px"><div id="respRes" class="res"></div>';
+        h += '<button class="rojo" id="bConfResp"' + (respSel.length ? '' : ' disabled') + '>Confirmar responsable' + (respSel.length > 1 ? 's' : '') + '</button>';
+        if (conf) h += '<button class="chico gris" id="bCancResp">Cancelar</button>';
+      }
+      if (p.eme || p.emeTel) h += contacto(p.eme || 'Contacto de emergencia', 'Emergencia (formulario)', p.emeTel, p.emeWa);
+      if (p.tel) h += contacto(p.ap + ', ' + p.nom, 'Teléfono propio', p.tel, p.telWa);
+      $('fMenor').innerHTML = h; $('fMenor').classList.remove('hide');
+    } else $('fMenor').classList.add('hide');
+
+    // acreditación
+    var fam = familia(p).filter(function (q) { return !acreditado(q); });
+    var a = '<h2>Acreditación</h2>';
+    if (rol === 'kit') {
+      a += e[0] ? '<div class="aviso a-ok"><b>Acreditado</b>' + hh(e[1]) + ' · ' + esc(e[3]) + '</div>' : '<div class="aviso a-warn"><b>Todavía no se acreditó</b>Le corresponde la ' + etiquetaMesa(p.mesa) + '.</div>';
+    } else if (e[0]) {
+      a += '<div class="aviso a-ok"><b>Acreditado</b>' + hh(e[1]) + ' · ' + esc(e[2]) + ' · ' + esc(e[3]) + '</div>';
+      a += '<button class="gris" id="bDesAcr">' + (confDesh === 'acr' ? 'Tocá otra vez para deshacer' : 'Deshacer acreditación') + '</button>';
+      if (fam.length) a += '<div class="mut" style="margin-top:10px">Familia sin acreditar:</div>' + fam.map(function (q) { return '<button class="chico sec" data-ir="' + esc(q.id) + '">' + esc(q.nom.split(' ')[0] + ' ' + q.ap) + '</button>'; }).join('');
+    } else {
+      if (fam.length) a += '<div class="mut">También acreditar a:</div>' + fam.map(function (q) {
+        return '<label class="check"><input type="checkbox" class="famchk" value="' + esc(q.id) + '"' + (q.menor ? ' checked' : '') + '> ' + esc(q.ap + ', ' + q.nom) + (q.menor ? ' <span class="chip c-menor">Menor</span>' + (!confirmados(q) ? ' <span class="mut">(' + (p.menor ? 'mismos responsables' : 'queda a su cargo') + ')</span>' : '') : '') + '</label>';
+      }).join('');
+      var falta = p.menor && !confirmados(p);
+      if (falta) a += '<div class="aviso a-warn"><b>Falta confirmar responsable</b>Antes de acreditar, confirmá arriba quién es el adulto responsable.</div>';
+      a += '<button class="ok" id="bAcr"' + (falta ? ' disabled' : '') + '>Acreditar · entregar credencial</button>';
+    }
+    $('fAcred').innerHTML = a;
+
+    // kit
+    if (rol === 'acr') { $('fKit').innerHTML = kitMesa(p); $('fKit').classList.remove('hide'); }
+    else {
+    var c = k.k === 'pag' || k.k === 'ent' ? 'a-ok' : k.k === 'debe' ? 'a-warn' : k.k === 'inh' ? 'a-salud' : '';
+    var t = '<h2>Kit</h2><div class="aviso ' + c + '" style="' + (c ? '' : 'background:#f1ede7') + '"><b>' + esc(k.t) + '</b>' + esc(k.d || (p.talle ? 'Talle elegido en el formulario: ' + p.talle : (k.k === 'na' || k.k === 'inh' || k.k === 'no' ? '' : 'Sin talle en el formulario'))) + '</div>';
+    if (k.k === 'debe' || (k.k === 'no' && k.hab)) t += '<button class="' + (k.k === 'debe' ? 'rojo' : 'gris') + '" id="bPagar">' + (k.k === 'debe' ? 'Registrar pago en efectivo' : 'Ahora sí lo quiere: registrar pago') + '</button>';
+    if (k.k === 'pag') {
+      t += '<label>Talle a entregar</label><select id="kTalle"><option value="">Elegí el talle</option>' + TALLES.map(function (x) { return '<option' + (x === p.talle ? ' selected' : '') + '>' + x + '</option>'; }).join('') + '</select>';
+      t += '<button class="ok" id="bEntregar">Entregar kit</button>';
+      if (e[4]) t += '<button class="gris" id="bDespagar">' + (confDesh === 'pag' ? 'Tocá otra vez para deshacer' : 'Deshacer pago') + '</button>';
+    }
+    if (admin && k.k === 'inh' && !p.puerta) t += '<button class="sec" id="bHabilitar">Habilitar kit para esta persona (excepción)</button>';
+    if (admin && k.k === 'inh' && p.puerta) t += '<button class="sec" id="bHabilitar">Habilitar kit (excepción)</button>';
+    if (admin && k.exc) t += '<button class="gris" id="bDeshabilitar">Quitar la excepción</button>';
+    if (k.k === 'ent') t += '<button class="gris" id="bDesent">' + (confDesh === 'ent' ? 'Tocá otra vez para deshacer' : 'Deshacer entrega') + '</button>';
+    if (e[11] && !e[7]) t += '<div class="mut" style="margin-top:8px">Enviado desde acreditación a las ' + hh(e[12]) + ' (' + Math.max(0, Math.round((new Date() - fecha(e[12])) / 60000)) + ' min esperando).</div>';
+    $('fKit').innerHTML = t;
+    }
+
+    // datos
+    var d = '<h2>Datos</h2><dl>';
+    var add = function (k2, v) { if (v) d += '<dt>' + k2 + '</dt><dd>' + esc(v) + '</dd>'; };
+    add('Parroquia / colegio', p.parroquia); add('Ciudad', p.ciudad); add('Provincia', p.prov); add('DNI', p.dni);
+    add('Nacimiento', p.nac); add('Email', p.email);
+    if (p.puerta) add('Inscripción', 'En el momento · ' + hh(p.inscripto) + ' por ' + (p.porInsc || ''));
+    else add('Inscripción', p.marca ? p.marca.slice(8, 10) + '/' + p.marca.slice(5, 7) + ' ' + p.marca.slice(11, 16) : 'sin fecha (cargado a mano)');
+    d += '</dl>';
+    if (!p.menor) {
+      if (p.tel) d += contacto('Teléfono', '', p.tel, p.telWa);
+      if (p.eme || p.emeTel) d += contacto(p.eme || 'Contacto de emergencia', 'Emergencia', p.emeTel, p.emeWa);
+    }
+    $('fDatos').innerHTML = d;
+    if (p.hijos.length) {
+      $('fHijos').innerHTML = '<h2>Menores vinculados</h2>' + p.hijos.map(function (id) { var q = byId[id]; return q ? filaHTML(q) : ''; }).join('');
+      $('fHijos').classList.remove('hide'); $('fHijos').classList.add('res');
+    } else $('fHijos').classList.add('hide');
+  }
+  /* kit visto desde una mesa de acreditación: entregar acá (si ya pagó) o enviar a la mesa de kits */
+  function kitMesa(p) {
+    var grupo = [p].concat(familia(p)).filter(function (q) { return acreditado(q) && pendienteKit(q) && !est(q)[11]; });
+    var enviados = [p].concat(familia(p)).filter(function (q) { var e = est(q); return e[11] && !e[7]; });
+    var k = kit(p), h = '<h2>Kit</h2>';
+    if (!acreditado(p)) {
+      var c = k.k === 'pag' || k.k === 'ent' ? 'a-ok' : k.k === 'debe' ? 'a-warn' : k.k === 'inh' ? 'a-salud' : '';
+      return h + '<div class="aviso ' + c + '" style="' + (c ? '' : 'background:#f1ede7') + '"><b>' + esc(k.t) + '</b>' + (k.k === 'debe' ? 'Después de acreditar, pasa por la mesa de kits a pagar.' : k.k === 'pag' ? 'Después de acreditar podés entregarlo acá o enviarlo a la mesa de kits.' : esc(k.d || '')) + '</div>';
+    }
+    if (!grupo.length) {
+      h += '<div class="aviso ' + (k.k === 'ent' ? 'a-ok' : '') + '" style="' + (k.k === 'ent' ? '' : 'background:#f1ede7') + '"><b>' + esc(k.t) + '</b>' + esc(k.d || '') + '</div>';
+      if (enviados.length) h += '<div class="mut" style="margin-top:6px">En la mesa de kits: ' + enviados.map(function (q) { return esc(q.nom.split(' ')[0]); }).join(', ') + '.</div>';
+      return h + '<button class="sec" id="bListo">Listo · siguiente</button>';
+    }
+    h += '<div class="mut">Para terminar, elegí qué hacer con el kit:</div>';
+    grupo.forEach(function (q) {
+      var kq = kit(q);
+      h += '<div class="kitfila"><div class="q"><b>' + esc(q.nom.split(' ')[0] + ' ' + q.ap) + '</b><div class="mut">' + esc(kq.t) + '</div></div>';
+      if (kq.k === 'pag') h += '<select data-talle="' + esc(q.id) + '"><option value="">Talle</option>' + TALLES.map(function (x) { return '<option' + (x === q.talle ? ' selected' : '') + '>' + x + '</option>'; }).join('') + '</select><button class="ok" data-entregar="' + esc(q.id) + '">Entregar acá</button>';
+      else h += '<span class="chip c-otra">paga en kits</span>';
+      h += '</div>';
+    });
+    h += '<button class="rojo" id="bDerivar">Enviar ' + (grupo.length > 1 ? 'a todos ' : '') + 'a la mesa de kits</button>';
+    return h;
+  }
+  function pintarLista() {
+    var q = norm($('lq').value), f = 0, o = 0;
+    var L = P.filter(function (p) { return deMesa(p); });
+    L.forEach(function (p) { if (acreditado(p)) o++; else f++; });
+    $('tF').textContent = 'Faltan ' + f; $('tO').textContent = 'Acreditados ' + o;
+    $('tF').classList.toggle('act', tab === 'faltan'); $('tO').classList.toggle('act', tab === 'ok');
+    L = L.filter(function (p) { return (tab === 'ok') === acreditado(p) && (!q || p.q.indexOf(q) >= 0); });
+    if (tab === 'ok') L.sort(function (a, b) { return est(a)[1] < est(b)[1] ? 1 : -1; });
+    else L.sort(function (a, b) { return a.q.localeCompare(b.q); });
+    $('lista').innerHTML = L.map(function (p) { return filaHTML(p, tab === 'ok' ? '<span class="mut">' + hh(est(p)[1]) + '</span>' : ''); }).join('') || '<div class="mut">Nadie en esta lista.</div>';
+  }
+
+  /* ---------- panel ---------- */
+  function pintarPanel() {
+    var R = rangos(), now = new Date(), h = '';
+    var tot = P.length, acr = P.filter(acreditado), ad = P.filter(function (p) { return !p.menor; }), me = P.filter(function (p) { return p.menor; });
+    var puerta = P.filter(function (p) { return p.puerta; }).length;
+    var tiempos = acr.map(function (p) { return { p: p, t: fecha(est(p)[1]) }; }).filter(function (x) { return x.t && !isNaN(x.t); }).sort(function (a, b) { return a.t - b.t; });
+    var ult15 = tiempos.filter(function (x) { return now - x.t <= 15 * 60000; }).length;
+    var faltan = tot - acr.length;
+    h += '<div class="card"><h2>Acreditación general</h2><div class="big">' + acr.length + ' <small>de ' + tot + ' · faltan ' + faltan + '</small></div><div class="bar"><i style="width:' + (tot ? Math.round(acr.length * 100 / tot) : 0) + '%"></i></div>' +
+      '<div class="grid3" style="margin-top:10px"><div class="kpi"><b>' + ad.filter(acreditado).length + '/' + ad.length + '</b><span>adultos</span></div><div class="kpi"><b>' + me.filter(acreditado).length + '/' + me.length + '</b><span>menores</span></div><div class="kpi"><b>' + puerta + '</b><span>inscriptos hoy</span></div></div>' +
+      '<div class="grid3" style="margin-top:8px"><div class="kpi"><b>' + ult15 + '</b><span>últimos 15 min</span></div><div class="kpi"><b>' + (ult15 ? Math.round(ult15 * 4) : 0) + '</b><span>por hora (ritmo)</span></div><div class="kpi"><b>' + (ult15 && faltan ? Math.ceil(faltan / ult15 * 15) + "'" : '—') + '</b><span>para terminar</span></div></div></div>';
+    // mesas
+    h += '<div class="card"><h2>Por mesa</h2><table><tr><th>Mesa</th><th class="n">Acred.</th><th class="n">15 min</th><th class="n">Ritmo</th></tr>';
+    R.forEach(function (r, i) {
+      var m = i + 1, de = P.filter(function (p) { return p.mesa === m; }), ok = de.filter(acreditado);
+      var tm = tiempos.filter(function (x) { return x.p.mesa === m; }), u = tm.filter(function (x) { return now - x.t <= 15 * 60000; }).length;
+      var ult = tm.slice(-11), rit = '—';
+      if (ult.length > 1) { var s = (ult[ult.length - 1].t - ult[0].t) / 1000 / (ult.length - 1); rit = s < 90 ? '1 c/' + Math.round(s) + 's' : '1 c/' + Math.round(s / 60) + 'min'; }
+      h += '<tr><td><b>' + m + '</b> ' + r[0].toUpperCase() + '–' + r[1].toUpperCase() + '<div class="bar" style="margin-top:3px"><i style="width:' + (de.length ? Math.round(ok.length * 100 / de.length) : 0) + '%"></i></div></td><td class="n">' + ok.length + '/' + de.length + '</td><td class="n">' + u + '</td><td class="n">' + rit + '</td></tr>';
+    });
+    h += '</table><div class="mut" style="margin-top:6px">Ritmo: tiempo promedio entre las últimas acreditaciones de esa mesa.</div></div>';
+    // linea de tiempo
+    if (tiempos.length) {
+      var t0 = new Date(tiempos[0].t); t0.setMinutes(Math.floor(t0.getMinutes() / 15) * 15, 0, 0);
+      var buckets = [], lab = [];
+      for (var b = new Date(t0); b <= now && buckets.length < 32; b = new Date(b.getTime() + 15 * 60000)) {
+        var fin = b.getTime() + 15 * 60000;
+        buckets.push(tiempos.filter(function (x) { return x.t >= b && x.t < fin; }).length);
+        lab.push(('0' + b.getHours()).slice(-2) + ':' + ('0' + b.getMinutes()).slice(-2));
+      }
+      var mx = Math.max.apply(null, buckets.concat([1]));
+      h += '<div class="card"><h2>Acreditaciones cada 15 minutos</h2><div class="barras">' + buckets.map(function (v) { return '<div style="height:' + Math.max(2, v / mx * 100) + '%" title="' + v + '"></div>'; }).join('') + '</div>' +
+        '<div class="barras-x">' + lab.map(function (l, i) { return '<span>' + (i % 2 === 0 ? l : '') + '</span>'; }).join('') + '</div><div class="mut">Máximo: ' + mx + ' en 15 minutos.</div></div>';
+    }
+    // kits
+    var kp = 0, kd = 0, ke = 0, porT = {};
+    P.forEach(function (p) {
+      var k = kit(p);
+      if (k.k === 'pag') { kp++; var tl = p.talle || 'sin talle'; porT[tl] = (porT[tl] || 0) + 1; }
+      if (k.k === 'ent') ke++;
+      if (k.k === 'debe') kd++;
+    });
+    var esp = enEspera(), dem = P.filter(function (p) { var e = est(p); return e[11] && e[7] && e[12] && e[8]; }).map(function (p) { var e = est(p); return (fecha(e[8]) - fecha(e[12])) / 60000; }).slice(-15);
+    h += '<div class="card"><h2>Mesa de kits</h2><div class="grid3"><div class="kpi"><b>' + esp.length + '</b><span>esperando</span></div><div class="kpi"><b>' + (esp.length ? Math.round((now - fecha(est(esp[0])[12])) / 60000) + "'" : '—') + '</b><span>espera más larga</span></div><div class="kpi"><b>' + (dem.length ? Math.round(dem.reduce(function (a, b) { return a + b; }, 0) / dem.length) + "'" : '—') + '</b><span>demora promedio</span></div></div></div>';
+    h += '<div class="card"><h2>Kits</h2><div class="grid3"><div class="kpi"><b>' + ke + '</b><span>entregados</span></div><div class="kpi"><b>' + kp + '</b><span>pagos por entregar</span></div><div class="kpi"><b>' + kd + '</b><span>deben</span></div></div>';
+    var tk = TALLES.concat(['sin talle']).filter(function (x) { return porT[x]; });
+    if (tk.length) h += '<table style="margin-top:8px"><tr><th>Talle</th><th class="n">Por entregar</th></tr>' + tk.map(function (x) { return '<tr><td>' + x + '</td><td class="n">' + porT[x] + '</td></tr>'; }).join('') + '</table>';
+    h += '</div>';
+    // ramas
+    var ramas = {};
+    P.forEach(function (p) { var r = p.rama || 'Sin dato'; ramas[r] = ramas[r] || [0, 0]; ramas[r][1]++; if (acreditado(p)) ramas[r][0]++; });
+    h += '<div class="card"><h2>Por rama</h2><table>' + Object.keys(ramas).sort().map(function (r) { return '<tr><td>' + esc(r) + '</td><td class="n">' + ramas[r][0] + '/' + ramas[r][1] + '</td></tr>'; }).join('') + '</table></div>';
+    // ultimos
+    h += '<div class="card res"><h2>Últimas acreditaciones</h2>' + tiempos.slice(-8).reverse().map(function (x) { return filaHTML(x.p, '<span class="mut">' + hh(est(x.p)[1]) + '</span>'); }).join('') + '</div>';
+    $('panel').innerHTML = h;
+  }
+
+  /* ---------- admin ---------- */
+  function pintarAdmin() {
+    if (document.activeElement && /^a(Tope|Mesas)$/.test(document.activeElement.id)) return;
+    $('aTope').value = cfg.fechaTope || '';
+    $('aSinFecha').checked = cfg.sinFechaAntes !== 'NO';
+    var sf = P.filter(function (p) { return !p.puerta && !p.menor && (!p.marca || p.sinFecha); });
+    $('aSinFechaTxt').textContent = 'Los ' + sf.length + ' adultos sin fecha de inscripción cuentan como inscriptos antes del tope';
+    $('aMesas').value = cfg.mesas || '';
+    $('aMesasInfo').textContent = rangos().map(function (r, i) { return 'Mesa ' + (i + 1) + ': ' + P.filter(function (p) { return p.mesa === i + 1; }).length; }).join(' · ');
+    $('aBase').textContent = P.length + ' personas cargadas (' + P.filter(function (p) { return p.puerta; }).length + ' inscriptas hoy).';
+  }
+
+  /* ---------- eventos ---------- */
+  function llenarMesas() {
+    $('mesaBtns').innerHTML = rangos().map(function (r, i) { return '<button data-mesa="' + (i + 1) + '" class="' + (mesa === i + 1 ? 'act' : '') + '">Mesa ' + (i + 1) + '<br><small>' + r[0].toUpperCase() + '–' + r[1].toUpperCase() + '</small></button>'; }).join('');
+    [].forEach.call(document.querySelectorAll('.roles button'), function (b) { b.classList.toggle('act', b.getAttribute('data-rol') === rol); });
+    $('mesaBox').classList.toggle('hide', rol !== 'acr');
+    $('pinBox').classList.toggle('hide', !!pin);
+  }
+  [].forEach.call(document.querySelectorAll('.roles button'), function (b) { b.onclick = function () { rol = b.getAttribute('data-rol'); if (rol === 'acr' && !mesa) mesa = 1; llenarMesas(); }; });
+  $('mesaBtns').onclick = function (e) { var b = e.target.closest('[data-mesa]'); if (b) { mesa = Number(b.getAttribute('data-mesa')); llenarMesas(); } };
+  $('bLogin').onclick = function () {
+    quien = $('quien').value.trim(); var cl = pin || $('pin').value.trim();
+    if (!quien || !cl) { $('eLogin').textContent = 'Completá tu nombre y la clave.'; return; }
+    $('eLogin').textContent = 'Entrando… (la primera vez tarda unos segundos)';
+    pin = cl;
+    cargarBase(function (r) {
+      if (!r) { $('eLogin').textContent = 'Sin conexión. Probá de nuevo.'; return; }
+      if (r.error) return;
+      lsS('pin', pin); lsS('quien', quien); lsS('mesa', String(mesa)); lsS('rol', rol); $('eLogin').textContent = '';
+      navRoles(); ver(rol === 'kit' ? 'vEspera' : 'vHome'); enviarCola();
+    });
+  };
+  $('bCambiar').onclick = function (e) { e.preventDefault(); $('quien').value = quien; llenarMesas(); ver('vLogin'); };
+  $('q').oninput = buscar;
+  $('res').onclick = $('lista').onclick = $('fHijos').onclick = $('panel').onclick = $('espera').onclick = function (e) { var f = e.target.closest('[data-id]'); if (f) abrir(f.getAttribute('data-id')); };
+  document.addEventListener('change', function (e) {
+    if (!e.target.classList.contains('respchk')) return;
+    var id = e.target.value;
+    if (e.target.checked) { if (respSel.length >= 2) { e.target.checked = false; $('eFicha').textContent = 'Máximo 2 responsables.'; return; } respSel.push(id); }
+    else respSel = respSel.filter(function (x) { return x !== id; });
+    editResp = true; $('eFicha').textContent = ''; var y = window.scrollY; pintarFicha(); window.scrollTo(0, y);
+  });
+  document.addEventListener('input', function (e) {
+    if (e.target.id !== 'respQ') return;
+    var q = norm(e.target.value);
+    $('respRes').innerHTML = q.length < 2 ? '' : P.filter(function (x) { return !x.menor && x.q.indexOf(q) >= 0; }).slice(0, 6).map(function (x) {
+      return '<div class="fila" data-resp="' + esc(x.id) + '"><div class="nm"><b>' + esc(x.ap) + '</b>, ' + esc(x.nom) + '<small>' + esc(x.tel || '') + '</small></div><span class="chip">elegir</span></div>'; }).join('');
+  });
+  document.addEventListener('click', function (e) {
+    var f = e.target.closest('[data-resp]'); if (!f) return;
+    var id = f.getAttribute('data-resp');
+    if (respSel.indexOf(id) < 0) { if (respSel.length >= 2) { $('eFicha').textContent = 'Máximo 2 responsables. Destildá uno primero.'; return; } respSel.push(id); }
+    editResp = true; pintarFicha();
+  });
+  $('bVolver').onclick = function () { var id = pila.pop(); if (id && byId[id]) { actual = byId[id]; pintarFicha(); window.scrollTo(0, 0); } else { ver('vHome'); } };
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('button'); if (!t || !actual || vistaActual !== 'vFicha') return;
+    var p = actual, id = t.id;
+    if (t.getAttribute('data-ir')) { abrir(t.getAttribute('data-ir')); return; }
+    if (id === 'bAcr') {
+      var ids = [p.id].concat([].map.call(document.querySelectorAll('.famchk:checked'), function (c) { return c.value; }));
+      var sin = ids.filter(function (id) { return id !== p.id && byId[id] && byId[id].menor && !confirmados(byId[id]); });
+      if (sin.length) accion('responsables', sin, { resp: p.menor ? confirmados(p).slice(0, 2) : [p.id] });
+      accion('acreditar', ids); window.scrollTo(0, 0);
+      $('eFicha').textContent = '';
+      var pend = ids.some(function (x) { return byId[x] && pendienteKit(byId[x]); });
+      if (rol === 'acr' && pend) { setTimeout(function () { var c = $('fKit'); if (c) c.scrollIntoView({ behavior: 'smooth' }); }, 150); return; }
+      if (!pend) setTimeout(function () { if (actual === p && vistaActual === 'vFicha') { $('q').value = ''; ver('vHome'); $('q').focus(); } }, 700);
+      return;
+    }
+    if (id === 'bPagar') { accion('pagar', [p.id]); return; }
+    if (id === 'bHabilitar') { accion('habilitar', [p.id]); return; }
+    if (id === 'bDeshabilitar') { accion('deshabilitar', [p.id]); return; }
+    if (id === 'bListo') { $('q').value = ''; ver('vHome'); $('q').focus(); return; }
+    if (id === 'bDerivar') {
+      var g = [p].concat(familia(p)).filter(function (q) { return acreditado(q) && pendienteKit(q) && !est(q)[11]; }).map(function (q) { return q.id; });
+      accion('derivar', g); $('q').value = ''; ver('vHome'); $('q').focus(); return;
+    }
+    if (t.getAttribute('data-entregar')) {
+      var qid = t.getAttribute('data-entregar'), sel = document.querySelector('select[data-talle="' + qid + '"]');
+      if (!sel || !sel.value) { $('eFicha').textContent = 'Elegí el talle antes de entregar.'; if (sel) sel.focus(); return; }
+      $('eFicha').textContent = ''; accion('entregar', [qid], { talle: sel.value }); return;
+    }
+    if (id === 'bCambiarResp') { editResp = true; respSel = (confirmados(p) || []).slice(); pintarFicha(); return; }
+    if (id === 'bCancResp') { editResp = false; respSel = []; pintarFicha(); return; }
+    if (id === 'bConfResp') { if (!respSel.length) return; accion('responsables', [p.id], { resp: respSel.slice(0, 2) }); editResp = false; respSel = []; pintarFicha(); return; }
+    if (id === 'bEntregar') {
+      var tl = $('kTalle').value; if (!tl) { $('eFicha').textContent = 'Elegí el talle antes de entregar.'; $('kTalle').focus(); return; }
+      accion('entregar', [p.id], { talle: tl }); return;
+    }
+    var deshacer = { bDesAcr: ['acr', 'desacreditar'], bDespagar: ['pag', 'despagar'], bDesent: ['ent', 'desentregar'] }[id];
+    if (deshacer) {
+      if (confDesh !== deshacer[0]) { confDesh = deshacer[0]; pintarFicha(); return; }
+      confDesh = ''; accion(deshacer[1], [p.id]);
+    }
+  });
+  [].forEach.call(document.querySelectorAll('nav button'), function (b) {
+    b.onclick = function () { var v = b.getAttribute('data-v'); if (v === 'vHome') $('q').value = ''; ver(v); if (v === 'vHome') $('q').focus(); };
+  });
+  $('tF').onclick = function () { tab = 'faltan'; pintarLista(); };
+  $('tO').onclick = function () { tab = 'ok'; pintarLista(); };
+  $('lq').oninput = pintarLista;
+  $('eF').onclick = function () { $('eImg').src = 'estampa-1.jpg'; this.classList.add('act'); $('eO').classList.remove('act'); };
+  $('eO').onclick = function () { $('eImg').src = 'estampa-2.jpg'; this.classList.add('act'); $('eF').classList.remove('act'); };
+
+  // inscripción en puerta
+  var padresSel = [];
+  function pintarPadres() { $('iPadres').innerHTML = padresSel.map(function (id) { var q = byId[id]; return q ? '✓ ' + esc(q.ap + ', ' + q.nom) : ''; }).join('<br>'); }
+  $('iEdad').oninput = function () { var n = parseInt(this.value, 10); $('iMenorBox').classList.toggle('hide', !(n >= 0 && n < 18)); };
+  $('iPadreQ').oninput = function () {
+    var q = norm(this.value);
+    if (q.length < 2) { $('iPadreRes').innerHTML = ''; return; }
+    $('iPadreRes').innerHTML = P.filter(function (p) { return !p.menor && p.q.indexOf(q) >= 0; }).slice(0, 8).map(function (p) { return '<div class="fila" data-padre="' + esc(p.id) + '"><div class="nm"><b>' + esc(p.ap) + '</b>, ' + esc(p.nom) + '</div><span class="chip">elegir</span></div>'; }).join('');
+  };
+  $('iPadreRes').onclick = function (e) { var f = e.target.closest('[data-padre]'); if (!f) return; var id = f.getAttribute('data-padre'); if (padresSel.indexOf(id) < 0 && padresSel.length < 2) padresSel.push(id); pintarPadres(); $('iPadreQ').value = ''; $('iPadreRes').innerHTML = ''; };
+  $('bInscribir').onclick = function () {
+    var ap = $('iAp').value.trim(), nom = $('iNom').value.trim();
+    if (!ap || !nom) { $('ePuerta').textContent = 'Apellido y nombres son obligatorios.'; return; }
+    var dni = digitos($('iDni').value);
+    if (dni && P.some(function (p) { return p.dni === dni; })) { $('ePuerta').textContent = 'Ya hay alguien inscripto con ese DNI. Buscalo en Buscar.'; return; }
+    var edad = parseInt($('iEdad').value, 10); if (isNaN(edad)) edad = null;
+    if (edad !== null && edad < 18 && !padresSel.length) { $('ePuerta').textContent = 'Es menor: elegí al menos un adulto responsable (hasta 2).'; return; }
+    var np = { id: 'P-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6), src: 'Puerta', fila: '', marca: ahoraTxt().slice(0, 16), sinFecha: false,
+      ap: ap, nom: nom, dni: dni, nac: '', edad: edad, menor: edad !== null && edad < 18, rama: $('iRama').value, parroquia: $('iPar').value.trim(), ciudad: '',
+      prov: $('iProv').value.trim(), tel: $('iTel').value.trim(), telWa: wa($('iTel').value), email: '', eme: $('iEme').value.trim(), emeTel: $('iEmeTel').value.trim(),
+      emeWa: wa($('iEmeTel').value), salud: $('iSalud').value.trim(), talle: '', kit: '', padres: edad !== null && edad < 18 ? padresSel.slice() : [], puerta: true,
+      inscripto: ahoraTxt(), porInsc: quien };
+    encolar('inscribir', [np, quien, etiquetaMesa(mesa), ahoraTxt()]);
+    if (np.padres.length) accion('responsables', [np.id], { resp: np.padres.slice(0, 2) });
+    if ($('iAcr').checked) accion('acreditar', [np.id]);
+    ['iAp', 'iNom', 'iDni', 'iEdad', 'iTel', 'iPar', 'iProv', 'iEme', 'iEmeTel', 'iSalud', 'iPadreQ'].forEach(function (x) { $(x).value = ''; });
+    padresSel = []; pintarPadres(); $('iMenorBox').classList.add('hide'); $('ePuerta').textContent = '';
+    abrir(np.id);
+  };
+
+  // admin
+  $('bGuardar').onclick = function () {
+    var cambios = { fechaTope: $('aTope').value, sinFechaAntes: $('aSinFecha').checked ? 'SI' : 'NO', mesas: $('aMesas').value.trim().toUpperCase() };
+    $('eAdmin').textContent = 'Guardando…';
+    srv('config', [pin, cambios], function (r) { if (r && !r.error) { $('eAdmin').textContent = 'Guardado. Se aplica en todos los celulares.'; recibirEstado(r); indexar(); refrescar(); } else $('eAdmin').textContent = 'No autorizado.'; }, function () { $('eAdmin').textContent = 'Sin conexión: no se guardó.'; });
+  };
+  $('bImportar').onclick = function () {
+    $('eImp').textContent = 'Importando…';
+    srv('importar', [pin], function (r) { $('eImp').textContent = r && r.importacion ? r.importacion.msj : 'No autorizado.'; if (r && !r.error) cargarBase(); }, function () { $('eImp').textContent = 'Sin conexión.'; }, 40000);
+  };
+  var confR = 0;
+  $('bReset').onclick = function () {
+    var b = this;
+    if (confR < 2) { confR++; b.textContent = confR === 1 ? 'Se borra todo lo registrado. Tocá de nuevo' : 'Última confirmación'; setTimeout(function () { confR = 0; b.textContent = 'Reiniciar todo a cero'; }, 6000); return; }
+    confR = 0; b.textContent = 'Reiniciando…';
+    srv('reset', [pin], function (r) { cola = []; lsS('cola', '[]'); b.textContent = 'Reiniciar todo a cero'; recibirEstado(r); cargarBase(); }, function () { b.textContent = 'Sin conexión: no se reinició'; });
+  };
+  $('bSalir').onclick = function () { try { localStorage.clear(); } catch (e) {} location.reload(); };
+
+  /* ---------- arranque ---------- */
+  try { cola = JSON.parse(lsG('cola') || '[]'); } catch (e) { cola = []; }
+  pin = lsG('pin'); quien = lsG('quien'); mesa = Number(lsG('mesa') || 1); rol = lsG('rol') || 'acr';
+  var mk = location.hash.match(/k=(\w+)/);
+  if (mk) { if (mk[1] !== pin) { pin = mk[1]; lsS('pin', pin); } try { history.replaceState(null, '', location.pathname); } catch (e) {} }
+  window.addEventListener('hashchange', function () { if (/k=\w+/.test(location.hash)) location.reload(); });
+  try { var b = JSON.parse(lsG('base') || 'null'); if (b && b.P) { P = b.P; version = b.v; indexar(); } } catch (e) {}
+  llenarMesas(); navRoles();
+  if (pin && quien && lsG('rol')) { ver(rol === 'kit' ? 'vEspera' : 'vHome'); sync('', 'conectando'); cargarBase(function () { enviarCola(); }); }
+  else ver('vLogin');
+  setInterval(function () {
+    if (!pin || vistaActual === 'vLogin') return;
+    if (cola.length) { enviarCola(); return; }
+    if (consultando) return;
+    consultando = true;
+    srv('estado', [pin], function (r) { consultando = false; recibirEstado(r); }, function () { consultando = false; });
+  }, 8000);
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+})();
+</script>
+</body>
+</html>
