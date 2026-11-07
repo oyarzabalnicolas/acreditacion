@@ -1,4 +1,4 @@
-var C = 'acred-v1';
+var C = 'acred-v2';
 self.addEventListener('install', function (e) { self.skipWaiting(); e.waitUntil(caches.open(C).then(function (c) { return c.addAll(['./', 'config.js', 'manifest.json', 'logo.png', 'estampa-1.jpg', 'estampa-2.jpg']); })); });
 self.addEventListener('activate', function (e) { e.waitUntil(self.clients.claim()); });
 self.addEventListener('fetch', function (e) {

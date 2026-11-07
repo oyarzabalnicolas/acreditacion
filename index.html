@@ -50,7 +50,7 @@ button:disabled { opacity:.5; }
 .nombre { font-size:25px; font-weight:750; line-height:1.15; margin:2px 0 6px; }
 .aviso { border-radius:11px; padding:10px 12px; margin-top:8px; font-size:15px; }
 .aviso b { display:block; font-size:11.5px; text-transform:uppercase; letter-spacing:.4px; margin-bottom:1px; }
-.a-salud { background:var(--redbg); color:#7d0d12; } .a-ok { background:var(--okbg); color:var(--ok); } .a-warn { background:var(--warnbg); color:var(--warn); }
+.a-salud { background:var(--redbg); color:#7d0d12; } .a-ok { background:var(--okbg); color:var(--ok); } .a-warn { background:var(--warnbg); color:var(--warn); } .a-ref { background:#e6eefb; color:#1f4f9a; } .kbtns { display:flex; gap:8px; } .kbtns button { flex:1; margin:6px 0 0; }
 .a-menor { background:#fff7e6; border:2px solid #f0c36a; color:#5c3d00; }
 .contacto { display:flex; align-items:center; gap:8px; padding:8px 0; border-top:1px solid var(--line); }
 .contacto:first-of-type { border-top:0; }
@@ -108,9 +108,8 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
     <input id="quien" autocomplete="off" placeholder="Queda anotado en cada registro">
     <label>¿Qué vas a hacer?</label>
     <div class="roles">
-      <button data-rol="acr"><b>Acreditación</b><span>Mesa de recepción: presente, credencial, menores</span></button>
-      <button data-rol="kit"><b>Kits</b><span>Cobro en efectivo y entrega de kits</span></button>
-      <button data-rol="ctl"><b>Consulta y control</b><span>Panel, búsqueda, contactos e inscripción</span></button>
+      <button data-rol="acr"><b>Acreditación</b><span>Mesa de recepción: presente, credencial, kit, menores</span></button>
+      <button data-rol="ctl"><b>Consulta y control</b><span>Panel, kits por grupo, contactos e inscripción</span></button>
     </div>
     <div id="mesaBox" class="hide"><label>Mesa</label><div class="tabs" id="mesaBtns"></div></div>
     <div id="pinBox"><label for="pin">Clave</label><input id="pin" type="tel" inputmode="numeric" autocomplete="off"></div>
@@ -162,9 +161,11 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
 
 <!-- ESPERA KITS -->
 <section id="vEspera" class="hide">
-  <div class="card"><div class="big"><span id="kEsp">0</span> <small>esperando su kit</small></div><div class="mut" id="kEspInfo"></div></div>
-  <div class="card res" id="espera"></div>
-  <div class="card" id="kTalles"></div>
+  <div class="card"><div class="big"><span id="kEsp">0</span> <small>kits pendientes</small></div><div class="mut" id="kEspInfo"></div>
+    <div class="tabs" style="margin-top:10px"><button data-kf="pend" id="kfP" class="act">Pendientes</button><button data-kf="todos" id="kfT">Todos</button></div>
+    <input id="kq" placeholder="Filtrar por parroquia, localidad o nombre" style="margin-top:8px"></div>
+  <div id="espera"></div>
+  <div id="kTalles" class="hide"></div>
 </section>
 
 <!-- PUERTA -->
@@ -205,11 +206,8 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
 <!-- ADMIN -->
 <section id="vAdmin" class="hide">
   <div class="card">
-    <h2>Kit: fecha tope</h2>
-    <label>Último día de inscripción con derecho a kit</label>
-    <input id="aTope" type="date">
-    <label class="check"><input type="checkbox" id="aSinFecha"> <span id="aSinFechaTxt"></span></label>
-    <h2 style="margin-top:14px">Mesas</h2>
+    <div class="hide"><input id="aTope" type="date"><input type="checkbox" id="aSinFecha"><span id="aSinFechaTxt"></span></div>
+    <h2>Mesas</h2>
     <label>Reparto por inicial del apellido (separado por comas)</label>
     <input id="aMesas" placeholder="A-F,G-M,N-Z">
     <div class="mut" id="aMesasInfo"></div>
@@ -224,7 +222,7 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
   </div>
   <div class="card">
     <h2>Pruebas</h2>
-    <div class="mut">Borra acreditaciones, pagos, entregas e inscripciones en puerta. Queda una copia de respaldo en la planilla.</div>
+    <div class="mut">Borra acreditaciones, entregas de kits e inscripciones en puerta. Queda una copia de respaldo en la planilla.</div>
     <button class="rojo" id="bReset">Reiniciar todo a cero</button>
   </div>
   <button class="gris" id="bSalir">Cerrar sesión en este celular</button>
@@ -232,12 +230,12 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
 </div>
 
 <nav id="nav" class="hide">
-  <button data-v="vEspera" data-roles="kit ctl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h16v12H4zM8 8V5h8v3M4 12h16"/></svg>En espera</button>
-  <button data-v="vHome" data-roles="acr kit ctl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Buscar</button>
+  <button data-v="vEspera" data-roles="ctl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h16v12H4zM8 8V5h8v3M4 12h16"/></svg>Kits</button>
+  <button data-v="vHome" data-roles="acr ctl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Buscar</button>
   <button data-v="vLista" data-roles="acr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>Mi mesa</button>
   <button data-v="vPuerta" data-roles="acr ctl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="10" cy="8" r="4"/><path d="M3 20c0-4 3-6 7-6M18 13v6M15 16h6"/></svg>Inscribir</button>
   <button data-v="vPanel" data-roles="ctl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Panel</button>
-  <button data-v="vEstampa" data-roles="acr kit ctl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z"/></svg>Estampa</button>
+  <button data-v="vEstampa" data-roles="acr ctl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 11c0 5.5-7 10-7 10z"/></svg>Estampa</button>
   <button data-v="vAdmin" id="navAdmin" data-roles="admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg>Ajustes</button>
 </nav>
 
@@ -335,7 +333,7 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
   }
   function vacio() { return [0, '', '', '', 0, '', '', 0, '', '', '', 0, '', 0, '']; }
   function est(p) { return E[p.id] || vacio(); }
-  function pendienteKit(p) { var k = kit(p).k; return k === 'debe' || k === 'pag'; }
+  function pendienteKit(p) { return kit(p).k === 'pend'; }
   function acreditado(p) { return !!est(p)[0]; }
   function habil(p) {
     if (p.puerta) return false;
@@ -343,15 +341,27 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
     if (!cfg.fechaTope) return true;
     return String(p.marca).slice(0, 10) <= cfg.fechaTope;
   }
+  function grupoDe(p) { return p.parroquia || p.ciudad || 'su grupo'; }
+  function tieneKit(p) { var e = est(p); return p.kit === 'P' || !!e[13] || !!e[4]; }
   function kit(p) {
     var e = est(p);
-    if (e[7]) return { k: 'ent', t: 'Kit entregado', d: 'Talle ' + (e[10] || '¿?') + ' · ' + hh(e[8]) + ' por ' + e[9] };
-    if (p.menor && p.kit !== 'P' && !e[4]) return { k: 'na', t: 'Menor · no lleva kit' };
-    if (p.kit === 'P') return { k: 'pag', t: 'Kit pagado' };
-    if (e[4]) return { k: 'pag', t: 'Kit pagado en el lugar', d: hh(e[5]) + ' · cobró ' + e[6] };
-    if (p.kit === 'NO') return { k: 'no', t: 'No quiere el kit', hab: habil(p) };
-    if (!habil(p) && e[13]) return { k: 'debe', t: 'Debe el kit · paga en el lugar', d: 'Habilitado por excepción (' + String(e[14]).split(' · ')[0] + ')', exc: true };
-    return habil(p) ? { k: 'debe', t: 'Debe el kit · paga en el lugar' } : { k: 'inh', t: p.puerta ? 'Sin kit · inscripto hoy' : (!p.marca || p.sinFecha) ? 'Sin kit · no tiene fecha de inscripción' : 'Sin kit · se inscribió después de la fecha tope' };
+    if (e[7]) return { k: 'ent', t: 'Kit entregado', d: hh(e[8]) + ' · ' + e[9] + (e[10] ? ' · talle ' + e[10] : '') };
+    if (tieneKit(p)) {
+      var exc = !!e[13] && p.kit !== 'P';
+      if (e[11]) return { k: 'ref', t: 'Kit con su referente', d: 'Lo entrega el referente de ' + grupoDe(p) + ' · desde las ' + hh(e[12]), exc: exc };
+      return { k: 'pend', t: 'Tiene kit · pendiente', d: 'Viene en la bolsa de ' + grupoDe(p) + (p.talle ? ' · talle ' + p.talle : '') + (exc ? ' · habilitado por excepción' : ''), exc: exc };
+    }
+    if (p.kit === 'NO') return { k: 'no', t: 'No encargó kit' };
+    if (p.menor) return { k: 'na', t: 'Menor · sin kit' };
+    return { k: 'sin', t: 'Sin kit', d: p.puerta ? 'Se inscribió hoy.' : 'No tiene kit encargado. No hay kits a la venta.' };
+  }
+  /* solo se tilda solo a un menor si este adulto ya es su responsable confirmado (o si es hermano con los mismos responsables) */
+  function marcarFam(p, q) {
+    if (!q.menor) return false;
+    var cq = confirmados(q) || [];
+    if (cq.indexOf(p.id) >= 0) return true;
+    var cp = p.menor ? (confirmados(p) || []) : [];
+    return cq.some(function (id) { return cp.indexOf(id) >= 0; });
   }
   function familia(p) {
     var ids = {};
@@ -424,28 +434,40 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
       b.classList.toggle('hide', !(r.indexOf(rol) >= 0 || (admin && r.indexOf('admin') >= 0)));
     });
   }
-  function rolTxt() { return rol === 'kit' ? 'Mesa de kits' : rol === 'ctl' ? 'Consulta y control' : etiquetaMesa(mesa); }
-  function enEspera() { return P.filter(function (p) { var e = est(p); return e[11] && !e[7]; }).sort(function (a, b) { return est(a)[12] < est(b)[12] ? -1 : 1; }); }
+  function rolTxt() { return rol === 'ctl' ? 'Consulta y control' : etiquetaMesa(mesa); }
+  var kfiltro = 'pend';
   function pintarEspera() {
-    var L = enEspera(), now = new Date();
-    $('kEsp').textContent = L.length;
-    var ent = P.filter(function (p) { return est(p)[7]; }).length;
-    $('kEspInfo').textContent = ent + ' kits entregados en total. Tocá a la persona para cobrar o entregar.';
-    $('espera').innerHTML = L.map(function (p) {
-      var k = kit(p), min = Math.max(0, Math.round((now - fecha(est(p)[12])) / 60000));
-      return filaHTML(p, '<span class="chip ' + (k.k === 'debe' ? 'c-otra">Debe' : 'c-ok">Pagado') + '</span><span class="mut">' + (p.talle || '¿talle?') + ' · ' + min + "'</span>");
-    }).join('') || '<div class="mut">Nadie esperando.</div>';
-    var porT = {};
-    P.forEach(function (p) { if (kit(p).k === 'pag') { var t = p.talle || 'sin talle'; porT[t] = (porT[t] || 0) + 1; } });
-    var tk = TALLES.concat(['sin talle']).filter(function (x) { return porT[x]; });
-    $('kTalles').innerHTML = '<h2>Pagados sin entregar, por talle</h2>' + (tk.length ? '<table>' + tk.map(function (x) { return '<tr><td>' + x + '</td><td class="n">' + porT[x] + '</td></tr>'; }).join('') + '</table>' : '<div class="mut">Ninguno.</div>');
+    var C = P.filter(tieneKit), q = norm($('kq').value);
+    var cnt = { ent: 0, ref: 0, pend: 0 }, aqui = 0;
+    C.forEach(function (p) { var k = kit(p).k; cnt[k] = (cnt[k] || 0) + 1; if (k === 'pend' && acreditado(p)) aqui++; });
+    $('kEsp').textContent = cnt.pend;
+    $('kEspInfo').innerHTML = C.length + ' kits con nombre · <b>' + cnt.ent + '</b> entregados · <b>' + cnt.ref + '</b> con su referente · <b>' + cnt.pend + '</b> pendientes' + (aqui ? ' (<b>' + aqui + '</b> ya acreditados)' : '') + '.';
+    var G = {};
+    C.forEach(function (p) { var g = grupoDe(p); (G[g] = G[g] || []).push(p); });
+    var gs = Object.keys(G).filter(function (g) { return !q || norm(g).indexOf(q) >= 0 || G[g].some(function (p) { return p.q.indexOf(q) >= 0; }); });
+    var pend = function (g) { return G[g].filter(function (p) { return kit(p).k === 'pend'; }).length; };
+    gs.sort(function (a, b) { return (pend(b) - pend(a)) || a.localeCompare(b); });
+    var h = gs.map(function (g) {
+      var L = G[g].slice().sort(function (a, b) { return a.q.localeCompare(b.q); }), n = { ent: 0, ref: 0, pend: 0 };
+      L.forEach(function (p) { n[kit(p).k]++; });
+      var V = kfiltro === 'pend' ? L.filter(function (p) { return kit(p).k === 'pend'; }) : L;
+      if (q && norm(g).indexOf(q) < 0) V = V.filter(function (p) { return p.q.indexOf(q) >= 0; });
+      if (kfiltro === 'pend' && !V.length && !q) return '';
+      return '<div class="card res"><h2 style="margin-bottom:2px">' + esc(g) + '</h2><div class="mut" style="margin-bottom:6px">' + L.length + ' kits · ' + n.ent + ' entregados · ' + n.ref + ' con referente · <b>' + n.pend + ' pendientes</b></div>' +
+        (V.map(function (p) {
+          var k = kit(p).k;
+          var chip = k === 'ent' ? '<span class="chip c-ok">Entregado</span>' : k === 'ref' ? '<span class="chip c-mesa">Referente</span>' : acreditado(p) ? '<span class="chip c-otra">Llegó · pendiente</span>' : '<span class="chip">No llegó</span>';
+          return filaHTML(p, chip);
+        }).join('') || '<div class="mut">Ninguno pendiente.</div>') + '</div>';
+    }).join('');
+    $('espera').innerHTML = h || '<div class="card mut">' + (kfiltro === 'pend' ? 'No queda ningún kit pendiente.' : 'Nada para mostrar.') + '</div>';
   }
   function deMesa(p) { return rol !== 'acr' || !mesa || p.mesa === mesa; }
   function pintarHome() {
     var tot = 0, ok = 0;
     P.forEach(function (p) { if (deMesa(p)) { tot++; if (acreditado(p)) ok++; } });
     $('hOk').textContent = ok; $('hTot').textContent = 'de ' + tot + ' acreditados';
-    $('hMesa').textContent = rolTxt() + (rol === 'kit' ? ' · ' + enEspera().length + ' esperando kit' : '');
+    $('hMesa').textContent = rolTxt();
     $('hBar').style.width = (tot ? Math.round(ok * 100 / tot) : 0) + '%';
     $('hPend').textContent = cola.length ? cola.length + ' cambio(s) guardados en este celular, enviándose…' : '';
     $('hQuien').textContent = quien ? 'Registrando como ' + quien : '';
@@ -532,7 +554,7 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
       if (fam.length) a += '<div class="mut" style="margin-top:10px">Familia sin acreditar:</div>' + fam.map(function (q) { return '<button class="chico sec" data-ir="' + esc(q.id) + '">' + esc(q.nom.split(' ')[0] + ' ' + q.ap) + '</button>'; }).join('');
     } else {
       if (fam.length) a += '<div class="mut">También acreditar a:</div>' + fam.map(function (q) {
-        return '<label class="check"><input type="checkbox" class="famchk" value="' + esc(q.id) + '"' + (q.menor ? ' checked' : '') + '> ' + esc(q.ap + ', ' + q.nom) + (q.menor ? ' <span class="chip c-menor">Menor</span>' + (!confirmados(q) ? ' <span class="mut">(' + (p.menor ? 'mismos responsables' : 'queda a su cargo') + ')</span>' : '') : '') + '</label>';
+        return '<label class="check"><input type="checkbox" class="famchk" value="' + esc(q.id) + '"' + (marcarFam(p, q) ? ' checked' : '') + '> ' + esc(q.ap + ', ' + q.nom) + (q.menor ? ' <span class="chip c-menor">Menor</span>' + (!confirmados(q) ? ' <span class="mut">(sugerido por apellido · si lo tildás ' + (p.menor ? 'queda con los mismos responsables' : 'queda a su cargo') + ')</span>' : '') : '') + '</label>';
       }).join('');
       var falta = p.menor && !confirmados(p);
       if (falta) a += '<div class="aviso a-warn"><b>Falta confirmar responsable</b>Antes de acreditar, confirmá arriba quién es el adulto responsable.</div>';
@@ -541,23 +563,7 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
     $('fAcred').innerHTML = a;
 
     // kit
-    if (rol === 'acr') { $('fKit').innerHTML = kitMesa(p); $('fKit').classList.remove('hide'); }
-    else {
-    var c = k.k === 'pag' || k.k === 'ent' ? 'a-ok' : k.k === 'debe' ? 'a-warn' : k.k === 'inh' ? 'a-salud' : '';
-    var t = '<h2>Kit</h2><div class="aviso ' + c + '" style="' + (c ? '' : 'background:#f1ede7') + '"><b>' + esc(k.t) + '</b>' + esc(k.d || (p.talle ? 'Talle elegido en el formulario: ' + p.talle : (k.k === 'na' || k.k === 'inh' || k.k === 'no' ? '' : 'Sin talle en el formulario'))) + '</div>';
-    if (k.k === 'debe' || (k.k === 'no' && k.hab)) t += '<button class="' + (k.k === 'debe' ? 'rojo' : 'gris') + '" id="bPagar">' + (k.k === 'debe' ? 'Registrar pago en efectivo' : 'Ahora sí lo quiere: registrar pago') + '</button>';
-    if (k.k === 'pag') {
-      t += '<label>Talle a entregar</label><select id="kTalle"><option value="">Elegí el talle</option>' + TALLES.map(function (x) { return '<option' + (x === p.talle ? ' selected' : '') + '>' + x + '</option>'; }).join('') + '</select>';
-      t += '<button class="ok" id="bEntregar">Entregar kit</button>';
-      if (e[4]) t += '<button class="gris" id="bDespagar">' + (confDesh === 'pag' ? 'Tocá otra vez para deshacer' : 'Deshacer pago') + '</button>';
-    }
-    if (admin && k.k === 'inh' && !p.puerta) t += '<button class="sec" id="bHabilitar">Habilitar kit para esta persona (excepción)</button>';
-    if (admin && k.k === 'inh' && p.puerta) t += '<button class="sec" id="bHabilitar">Habilitar kit (excepción)</button>';
-    if (admin && k.exc) t += '<button class="gris" id="bDeshabilitar">Quitar la excepción</button>';
-    if (k.k === 'ent') t += '<button class="gris" id="bDesent">' + (confDesh === 'ent' ? 'Tocá otra vez para deshacer' : 'Deshacer entrega') + '</button>';
-    if (e[11] && !e[7]) t += '<div class="mut" style="margin-top:8px">Enviado desde acreditación a las ' + hh(e[12]) + ' (' + Math.max(0, Math.round((new Date() - fecha(e[12])) / 60000)) + ' min esperando).</div>';
-    $('fKit').innerHTML = t;
-    }
+    $('fKit').innerHTML = kitCard(p); $('fKit').classList.remove('hide');
 
     // datos
     var d = '<h2>Datos</h2><dl>';
@@ -577,29 +583,36 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
       $('fHijos').classList.remove('hide'); $('fHijos').classList.add('res');
     } else $('fHijos').classList.add('hide');
   }
-  /* kit visto desde una mesa de acreditación: entregar acá (si ya pagó) o enviar a la mesa de kits */
-  function kitMesa(p) {
-    var grupo = [p].concat(familia(p)).filter(function (q) { return acreditado(q) && pendienteKit(q) && !est(q)[11]; });
-    var enviados = [p].concat(familia(p)).filter(function (q) { var e = est(q); return e[11] && !e[7]; });
-    var k = kit(p), h = '<h2>Kit</h2>';
-    if (!acreditado(p)) {
-      var c = k.k === 'pag' || k.k === 'ent' ? 'a-ok' : k.k === 'debe' ? 'a-warn' : k.k === 'inh' ? 'a-salud' : '';
-      return h + '<div class="aviso ' + c + '" style="' + (c ? '' : 'background:#f1ede7') + '"><b>' + esc(k.t) + '</b>' + (k.k === 'debe' ? 'Después de acreditar, pasa por la mesa de kits a pagar.' : k.k === 'pag' ? 'Después de acreditar podés entregarlo acá o enviarlo a la mesa de kits.' : esc(k.d || '')) + '</div>';
+  /* kit: los kits vienen con nombre en bolsas por parroquia/localidad. Se entrega acá o queda con su referente. */
+  function avisoKit(k) {
+    var c = k.k === 'ent' ? 'a-ok' : k.k === 'ref' ? 'a-ref' : k.k === 'pend' ? 'a-warn' : '';
+    return '<div class="aviso ' + c + '" style="' + (c ? '' : 'background:#f1ede7') + '"><b>' + esc(k.t) + '</b>' + esc(k.d || '') + '</div>';
+  }
+  function botonesKit(q) {
+    return '<button class="ok" data-kent="' + esc(q.id) + '">Entregar</button><button class="sec" data-kref="' + esc(q.id) + '">Con su referente</button>';
+  }
+  function kitCard(p) {
+    var k = kit(p), e = est(p), h = '<h2>Kit</h2>', puede = acreditado(p) || rol === 'ctl';
+    var otros = familia(p).filter(function (q) { return acreditado(q) && pendienteKit(q); });
+    if (k.k === 'pend' && !puede) {
+      h += avisoKit(k) + '<div class="mut" style="margin-top:6px">Después de acreditar, entregáselo o dejalo con su referente.</div>';
+    } else if (k.k === 'pend') {
+      h += avisoKit(k) + '<div class="mut" style="margin-top:10px">¿Qué pasa con su kit?</div><div class="kbtns">' + botonesKit(p) + '</div>';
+    } else {
+      h += avisoKit(k);
+      if (k.k === 'ref') h += '<button class="ok" data-kent="' + esc(p.id) + '">Ya lo recibió: marcar entregado</button><button class="gris" id="bDesref">' + (confDesh === 'ref' ? 'Tocá otra vez para deshacer' : 'Deshacer') + '</button>';
+      if (k.k === 'ent') h += '<button class="gris" id="bDesent">' + (confDesh === 'ent' ? 'Tocá otra vez para deshacer' : 'Deshacer entrega') + '</button>';
     }
-    if (!grupo.length) {
-      h += '<div class="aviso ' + (k.k === 'ent' ? 'a-ok' : '') + '" style="' + (k.k === 'ent' ? '' : 'background:#f1ede7') + '"><b>' + esc(k.t) + '</b>' + esc(k.d || '') + '</div>';
-      if (enviados.length) h += '<div class="mut" style="margin-top:6px">En la mesa de kits: ' + enviados.map(function (q) { return esc(q.nom.split(' ')[0]); }).join(', ') + '.</div>';
-      return h + '<button class="sec" id="bListo">Listo · siguiente</button>';
+    if (otros.length) {
+      h += '<div class="mut" style="margin-top:12px">Kits pendientes de su familia:</div>';
+      otros.forEach(function (q) { h += '<div class="kitfila"><div class="q"><b>' + esc(q.nom.split(' ')[0] + ' ' + q.ap) + '</b><div class="mut">' + esc(kit(q).d || '') + '</div></div>' + botonesKit(q) + '</div>'; });
     }
-    h += '<div class="mut">Para terminar, elegí qué hacer con el kit:</div>';
-    grupo.forEach(function (q) {
-      var kq = kit(q);
-      h += '<div class="kitfila"><div class="q"><b>' + esc(q.nom.split(' ')[0] + ' ' + q.ap) + '</b><div class="mut">' + esc(kq.t) + '</div></div>';
-      if (kq.k === 'pag') h += '<select data-talle="' + esc(q.id) + '"><option value="">Talle</option>' + TALLES.map(function (x) { return '<option' + (x === q.talle ? ' selected' : '') + '>' + x + '</option>'; }).join('') + '</select><button class="ok" data-entregar="' + esc(q.id) + '">Entregar acá</button>';
-      else h += '<span class="chip c-otra">paga en kits</span>';
-      h += '</div>';
-    });
-    h += '<button class="rojo" id="bDerivar">Enviar ' + (grupo.length > 1 ? 'a todos ' : '') + 'a la mesa de kits</button>';
+    if (admin && (k.k === 'sin' || k.k === 'no')) h += '<button class="sec" id="bHabilitar">Tiene kit con su nombre (excepción)</button>';
+    if (admin && k.exc) h += '<button class="gris" id="bDeshabilitar">Quitar la excepción</button>';
+    if (rol === 'acr' && acreditado(p)) {
+      var quedan = (k.k === 'pend' ? 1 : 0) + otros.length;
+      h += '<button class="' + (quedan ? 'gris' : 'sec') + '" id="bListo">' + (quedan ? 'Dejar pendiente · siguiente' : 'Listo · siguiente') + '</button>';
+    }
     return h;
   }
   function pintarLista() {
@@ -649,19 +662,10 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
         '<div class="barras-x">' + lab.map(function (l, i) { return '<span>' + (i % 2 === 0 ? l : '') + '</span>'; }).join('') + '</div><div class="mut">Máximo: ' + mx + ' en 15 minutos.</div></div>';
     }
     // kits
-    var kp = 0, kd = 0, ke = 0, porT = {};
-    P.forEach(function (p) {
-      var k = kit(p);
-      if (k.k === 'pag') { kp++; var tl = p.talle || 'sin talle'; porT[tl] = (porT[tl] || 0) + 1; }
-      if (k.k === 'ent') ke++;
-      if (k.k === 'debe') kd++;
-    });
-    var esp = enEspera(), dem = P.filter(function (p) { var e = est(p); return e[11] && e[7] && e[12] && e[8]; }).map(function (p) { var e = est(p); return (fecha(e[8]) - fecha(e[12])) / 60000; }).slice(-15);
-    h += '<div class="card"><h2>Mesa de kits</h2><div class="grid3"><div class="kpi"><b>' + esp.length + '</b><span>esperando</span></div><div class="kpi"><b>' + (esp.length ? Math.round((now - fecha(est(esp[0])[12])) / 60000) + "'" : '—') + '</b><span>espera más larga</span></div><div class="kpi"><b>' + (dem.length ? Math.round(dem.reduce(function (a, b) { return a + b; }, 0) / dem.length) + "'" : '—') + '</b><span>demora promedio</span></div></div></div>';
-    h += '<div class="card"><h2>Kits</h2><div class="grid3"><div class="kpi"><b>' + ke + '</b><span>entregados</span></div><div class="kpi"><b>' + kp + '</b><span>pagos por entregar</span></div><div class="kpi"><b>' + kd + '</b><span>deben</span></div></div>';
-    var tk = TALLES.concat(['sin talle']).filter(function (x) { return porT[x]; });
-    if (tk.length) h += '<table style="margin-top:8px"><tr><th>Talle</th><th class="n">Por entregar</th></tr>' + tk.map(function (x) { return '<tr><td>' + x + '</td><td class="n">' + porT[x] + '</td></tr>'; }).join('') + '</table>';
-    h += '</div>';
+    var KC = P.filter(tieneKit), kn = { ent: 0, ref: 0, pend: 0 }, kaqui = 0;
+    KC.forEach(function (p) { var k = kit(p).k; kn[k]++; if (k === 'pend' && acreditado(p)) kaqui++; });
+    h += '<div class="card"><h2>Kits (' + KC.length + ' con nombre)</h2><div class="grid3"><div class="kpi"><b>' + kn.ent + '</b><span>entregados</span></div><div class="kpi"><b>' + kn.ref + '</b><span>con su referente</span></div><div class="kpi"><b>' + kn.pend + '</b><span>pendientes</span></div></div>' +
+      '<div class="mut" style="margin-top:8px">' + (kaqui ? '<b>' + kaqui + '</b> de los pendientes ya están acreditados (llegaron y todavía no tienen su kit). ' : '') + 'El detalle por parroquia está en <b>Kits</b>.</div></div>';
     // ramas
     var ramas = {};
     P.forEach(function (p) { var r = p.rama || 'Sin dato'; ramas[r] = ramas[r] || [0, 0]; ramas[r][1]++; if (acreditado(p)) ramas[r][0]++; });
@@ -701,7 +705,7 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
       if (!r) { $('eLogin').textContent = 'Sin conexión. Probá de nuevo.'; return; }
       if (r.error) return;
       lsS('pin', pin); lsS('quien', quien); lsS('mesa', String(mesa)); lsS('rol', rol); $('eLogin').textContent = '';
-      navRoles(); ver(rol === 'kit' ? 'vEspera' : 'vHome'); enviarCola();
+      navRoles(); ver('vHome'); enviarCola();
     });
   };
   $('bCambiar').onclick = function (e) { e.preventDefault(); $('quien').value = quien; llenarMesas(); ver('vLogin'); };
@@ -742,27 +746,15 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
       if (!pend) setTimeout(function () { if (actual === p && vistaActual === 'vFicha') { $('q').value = ''; ver('vHome'); $('q').focus(); } }, 700);
       return;
     }
-    if (id === 'bPagar') { accion('pagar', [p.id]); return; }
+    if (t.getAttribute('data-kent')) { accion('entregar', [t.getAttribute('data-kent')], { talle: (byId[t.getAttribute('data-kent')] || {}).talle || '' }); return; }
+    if (t.getAttribute('data-kref')) { accion('derivar', [t.getAttribute('data-kref')]); return; }
     if (id === 'bHabilitar') { accion('habilitar', [p.id]); return; }
     if (id === 'bDeshabilitar') { accion('deshabilitar', [p.id]); return; }
     if (id === 'bListo') { $('q').value = ''; ver('vHome'); $('q').focus(); return; }
-    if (id === 'bDerivar') {
-      var g = [p].concat(familia(p)).filter(function (q) { return acreditado(q) && pendienteKit(q) && !est(q)[11]; }).map(function (q) { return q.id; });
-      accion('derivar', g); $('q').value = ''; ver('vHome'); $('q').focus(); return;
-    }
-    if (t.getAttribute('data-entregar')) {
-      var qid = t.getAttribute('data-entregar'), sel = document.querySelector('select[data-talle="' + qid + '"]');
-      if (!sel || !sel.value) { $('eFicha').textContent = 'Elegí el talle antes de entregar.'; if (sel) sel.focus(); return; }
-      $('eFicha').textContent = ''; accion('entregar', [qid], { talle: sel.value }); return;
-    }
     if (id === 'bCambiarResp') { editResp = true; respSel = (confirmados(p) || []).slice(); pintarFicha(); return; }
     if (id === 'bCancResp') { editResp = false; respSel = []; pintarFicha(); return; }
     if (id === 'bConfResp') { if (!respSel.length) return; accion('responsables', [p.id], { resp: respSel.slice(0, 2) }); editResp = false; respSel = []; pintarFicha(); return; }
-    if (id === 'bEntregar') {
-      var tl = $('kTalle').value; if (!tl) { $('eFicha').textContent = 'Elegí el talle antes de entregar.'; $('kTalle').focus(); return; }
-      accion('entregar', [p.id], { talle: tl }); return;
-    }
-    var deshacer = { bDesAcr: ['acr', 'desacreditar'], bDespagar: ['pag', 'despagar'], bDesent: ['ent', 'desentregar'] }[id];
+    var deshacer = { bDesAcr: ['acr', 'desacreditar'], bDesref: ['ref', 'desderivar'], bDesent: ['ent', 'desentregar'] }[id];
     if (deshacer) {
       if (confDesh !== deshacer[0]) { confDesh = deshacer[0]; pintarFicha(); return; }
       confDesh = ''; accion(deshacer[1], [p.id]);
@@ -771,6 +763,8 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
   [].forEach.call(document.querySelectorAll('nav button'), function (b) {
     b.onclick = function () { var v = b.getAttribute('data-v'); if (v === 'vHome') $('q').value = ''; ver(v); if (v === 'vHome') $('q').focus(); };
   });
+  $('kq').oninput = pintarEspera;
+  [].forEach.call(document.querySelectorAll('[data-kf]'), function (b) { b.onclick = function () { kfiltro = b.getAttribute('data-kf'); $('kfP').classList.toggle('act', kfiltro === 'pend'); $('kfT').classList.toggle('act', kfiltro === 'todos'); pintarEspera(); }; });
   $('tF').onclick = function () { tab = 'faltan'; pintarLista(); };
   $('tO').onclick = function () { tab = 'ok'; pintarLista(); };
   $('lq').oninput = pintarLista;
@@ -828,13 +822,13 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
 
   /* ---------- arranque ---------- */
   try { cola = JSON.parse(lsG('cola') || '[]'); } catch (e) { cola = []; }
-  pin = lsG('pin'); quien = lsG('quien'); mesa = Number(lsG('mesa') || 1); rol = lsG('rol') || 'acr';
+  pin = lsG('pin'); quien = lsG('quien'); mesa = Number(lsG('mesa') || 1); rol = lsG('rol') || 'acr'; if (rol === 'kit') rol = 'ctl';
   var mk = location.hash.match(/k=(\w+)/);
   if (mk) { if (mk[1] !== pin) { pin = mk[1]; lsS('pin', pin); } try { history.replaceState(null, '', location.pathname); } catch (e) {} }
   window.addEventListener('hashchange', function () { if (/k=\w+/.test(location.hash)) location.reload(); });
   try { var b = JSON.parse(lsG('base') || 'null'); if (b && b.P) { P = b.P; version = b.v; indexar(); } } catch (e) {}
   llenarMesas(); navRoles();
-  if (pin && quien && lsG('rol')) { ver(rol === 'kit' ? 'vEspera' : 'vHome'); sync('', 'conectando'); cargarBase(function () { enviarCola(); }); }
+  if (pin && quien && lsG('rol')) { ver('vHome'); sync('', 'conectando'); cargarBase(function () { enviarCola(); }); }
   else ver('vLogin');
   setInterval(function () {
     if (!pin || vistaActual === 'vLogin') return;
