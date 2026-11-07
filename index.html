@@ -50,7 +50,7 @@ button:disabled { opacity:.5; }
 .nombre { font-size:25px; font-weight:750; line-height:1.15; margin:2px 0 6px; }
 .aviso { border-radius:11px; padding:10px 12px; margin-top:8px; font-size:15px; }
 .aviso b { display:block; font-size:11.5px; text-transform:uppercase; letter-spacing:.4px; margin-bottom:1px; }
-.a-salud { background:var(--redbg); color:#7d0d12; } .a-ok { background:var(--okbg); color:var(--ok); } .a-warn { background:var(--warnbg); color:var(--warn); } .a-ref { background:#e6eefb; color:#1f4f9a; } .kbtns { display:flex; gap:8px; } .kbtns button { flex:1; margin:6px 0 0; }
+.a-salud { background:var(--redbg); color:#7d0d12; } .a-ok { background:var(--okbg); color:var(--ok); } .a-warn { background:var(--warnbg); color:var(--warn); } .a-ref { background:#e6eefb; color:#1f4f9a; } .a-debe { background:#fdecd9; color:#8a4b0f; } .kbtns { display:flex; gap:8px; } .kbtns button { flex:1; margin:6px 0 0; }
 .a-menor { background:#fff7e6; border:2px solid #f0c36a; color:#5c3d00; }
 .contacto { display:flex; align-items:center; gap:8px; padding:8px 0; border-top:1px solid var(--line); }
 .contacto:first-of-type { border-top:0; }
@@ -206,8 +206,11 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
 <!-- ADMIN -->
 <section id="vAdmin" class="hide">
   <div class="card">
-    <div class="hide"><input id="aTope" type="date"><input type="checkbox" id="aSinFecha"><span id="aSinFechaTxt"></span></div>
-    <h2>Mesas</h2>
+    <h2>Kit: fecha tope</h2>
+    <label>Último día de inscripción con kit reservado (si no lo pagó, puede pagarlo en el lugar)</label>
+    <input id="aTope" type="date">
+    <label class="check"><input type="checkbox" id="aSinFecha"> <span id="aSinFechaTxt"></span></label>
+    <h2 style="margin-top:14px">Mesas</h2>
     <label>Reparto por inicial del apellido (separado por comas)</label>
     <input id="aMesas" placeholder="A-F,G-M,N-Z">
     <div class="mut" id="aMesasInfo"></div>
@@ -222,7 +225,7 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
   </div>
   <div class="card">
     <h2>Pruebas</h2>
-    <div class="mut">Borra acreditaciones, entregas de kits e inscripciones en puerta. Queda una copia de respaldo en la planilla.</div>
+    <div class="mut">Borra acreditaciones, pagos y entregas de kits e inscripciones en puerta. Queda una copia de respaldo en la planilla.</div>
     <button class="rojo" id="bReset">Reiniciar todo a cero</button>
   </div>
   <button class="gris" id="bSalir">Cerrar sesión en este celular</button>
@@ -333,7 +336,7 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
   }
   function vacio() { return [0, '', '', '', 0, '', '', 0, '', '', '', 0, '', 0, '']; }
   function est(p) { return E[p.id] || vacio(); }
-  function pendienteKit(p) { return kit(p).k === 'pend'; }
+  function pendienteKit(p) { var k = kit(p).k; return k === 'pend' || k === 'debe'; }
   function acreditado(p) { return !!est(p)[0]; }
   function habil(p) {
     if (p.puerta) return false;
@@ -351,6 +354,7 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
     for (var i = 0; i < GRUPOS.length && !g; i++) if (GRUPOS[i][0].test(t)) g = GRUPOS[i][1];
     return (p.grupo = g || p.parroquia || p.ciudad || 'Sin grupo');
   }
+  function conKit(p) { return tieneKit(p) || kit(p).k === 'debe'; }
   function tieneKit(p) { var e = est(p); return p.kit === 'P' || !!e[13] || !!e[4]; }
   function kit(p) {
     var e = est(p);
@@ -358,11 +362,12 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
     if (tieneKit(p)) {
       var exc = !!e[13] && p.kit !== 'P';
       if (e[11]) return { k: 'ref', t: 'Kit con su referente', d: 'Lo entrega el referente de ' + grupoDe(p) + ' · desde las ' + hh(e[12]), exc: exc };
-      return { k: 'pend', t: 'Tiene kit · pendiente', d: 'Viene en la bolsa de ' + grupoDe(p) + (p.talle ? ' · talle ' + p.talle : '') + (exc ? ' · habilitado por excepción' : ''), exc: exc };
+      return { k: 'pend', t: e[4] && p.kit !== 'P' ? 'Kit pagado hoy · pendiente de entrega' : 'Tiene kit · pendiente', d: (e[4] && p.kit !== 'P' ? 'Pagó a las ' + hh(e[5]) + ' (' + e[6] + '). ' : '') + 'Viene en la bolsa de ' + grupoDe(p) + (p.talle ? ' · talle ' + p.talle : '') + (exc ? ' · habilitado por excepción' : ''), exc: exc };
     }
     if (p.kit === 'NO') return { k: 'no', t: 'No encargó kit' };
     if (p.menor) return { k: 'na', t: 'Menor · sin kit' };
-    return { k: 'sin', t: 'Sin kit', d: p.puerta ? 'Se inscribió hoy.' : 'No tiene kit encargado. No hay kits a la venta.' };
+    if (habil(p)) return { k: 'debe', t: 'Kit reservado · falta pagar', d: 'Se inscribió antes de la fecha tope: su kit lo espera en la bolsa de ' + grupoDe(p) + (p.talle ? ' · talle ' + p.talle : '') + '.' };
+    return { k: 'sin', t: 'Sin kit', d: p.puerta ? 'Se inscribió hoy. No hay kits a la venta.' : (!p.marca || p.sinFecha) ? 'No tiene fecha de inscripción. No hay kits a la venta.' : 'Se inscribió después de la fecha tope. No hay kits a la venta.' };
   }
   /* solo se tilda solo a un menor si este adulto ya es su responsable confirmado (o si es hermano con los mismos responsables) */
   function marcarFam(p, q) {
@@ -446,27 +451,27 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
   function rolTxt() { return rol === 'ctl' ? 'Consulta y control' : etiquetaMesa(mesa); }
   var kfiltro = 'pend';
   function pintarEspera() {
-    var C = P.filter(tieneKit), q = norm($('kq').value);
-    var cnt = { ent: 0, ref: 0, pend: 0 }, aqui = 0;
-    C.forEach(function (p) { var k = kit(p).k; cnt[k] = (cnt[k] || 0) + 1; if (k === 'pend' && acreditado(p)) aqui++; });
-    $('kEsp').textContent = cnt.pend;
-    $('kEspInfo').innerHTML = C.length + ' kits con nombre · <b>' + cnt.ent + '</b> entregados · <b>' + cnt.ref + '</b> con su referente · <b>' + cnt.pend + '</b> pendientes' + (aqui ? ' (<b>' + aqui + '</b> ya acreditados)' : '') + '.';
+    var C = P.filter(conKit), q = norm($('kq').value);
+    var cnt = { ent: 0, ref: 0, pend: 0, debe: 0 }, aqui = 0;
+    C.forEach(function (p) { var k = kit(p).k; cnt[k] = (cnt[k] || 0) + 1; if ((k === 'pend' || k === 'debe') && acreditado(p)) aqui++; });
+    $('kEsp').textContent = cnt.pend + cnt.debe;
+    $('kEspInfo').innerHTML = C.length + ' kits con nombre · <b>' + cnt.ent + '</b> entregados · <b>' + cnt.ref + '</b> con su referente · <b>' + cnt.pend + '</b> pendientes de entrega · <b>' + cnt.debe + '</b> reservados sin pagar' + (aqui ? ' (<b>' + aqui + '</b> de los pendientes ya están acreditados)' : '') + '.';
     var G = {};
     C.forEach(function (p) { var g = grupoDe(p); (G[g] = G[g] || []).push(p); });
     var mq = function (p) { return p.q.indexOf(q) >= 0 || norm(p.parroquia + ' ' + p.ciudad).indexOf(q) >= 0; };
     var gs = Object.keys(G).filter(function (g) { return !q || norm(g).indexOf(q) >= 0 || G[g].some(mq); });
-    var pend = function (g) { return G[g].filter(function (p) { return kit(p).k === 'pend'; }).length; };
+    var pend = function (g) { return G[g].filter(pendienteKit).length; };
     gs.sort(function (a, b) { return (pend(b) - pend(a)) || a.localeCompare(b); });
     var h = gs.map(function (g) {
-      var L = G[g].slice().sort(function (a, b) { return a.q.localeCompare(b.q); }), n = { ent: 0, ref: 0, pend: 0 };
+      var L = G[g].slice().sort(function (a, b) { return a.q.localeCompare(b.q); }), n = { ent: 0, ref: 0, pend: 0, debe: 0 };
       L.forEach(function (p) { n[kit(p).k]++; });
-      var V = kfiltro === 'pend' ? L.filter(function (p) { return kit(p).k === 'pend'; }) : L;
+      var V = kfiltro === 'pend' ? L.filter(pendienteKit) : L;
       if (q && norm(g).indexOf(q) < 0) V = V.filter(mq);
       if (kfiltro === 'pend' && !V.length && !q) return '';
-      return '<div class="card res"><h2 style="margin-bottom:2px">' + esc(g) + '</h2><div class="mut" style="margin-bottom:6px">' + L.length + ' kits · ' + n.ent + ' entregados · ' + n.ref + ' con referente · <b>' + n.pend + ' pendientes</b></div>' +
+      return '<div class="card res"><h2 style="margin-bottom:2px">' + esc(g) + '</h2><div class="mut" style="margin-bottom:6px">' + L.length + ' kits · ' + n.ent + ' entregados · ' + n.ref + ' con referente · <b>' + n.pend + ' pendientes</b>' + (n.debe ? ' · <b>' + n.debe + ' sin pagar</b>' : '') + '</div>' +
         (V.map(function (p) {
           var k = kit(p).k;
-          var chip = k === 'ent' ? '<span class="chip c-ok">Entregado</span>' : k === 'ref' ? '<span class="chip c-mesa">Referente</span>' : acreditado(p) ? '<span class="chip c-otra">Llegó · pendiente</span>' : '<span class="chip">No llegó</span>';
+          var chip = k === 'ent' ? '<span class="chip c-ok">Entregado</span>' : k === 'ref' ? '<span class="chip c-mesa">Referente</span>' : k === 'debe' ? '<span class="chip c-otra">' + (acreditado(p) ? 'Llegó · ' : '') + 'Sin pagar</span>' : acreditado(p) ? '<span class="chip c-otra">Llegó · pendiente</span>' : '<span class="chip">No llegó</span>';
           return filaHTML(p, chip);
         }).join('') || '<div class="mut">Ninguno pendiente.</div>') + '</div>';
     }).join('');
@@ -595,7 +600,7 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
   }
   /* kit: los kits vienen con nombre en bolsas por parroquia/localidad. Se entrega acá o queda con su referente. */
   function avisoKit(k) {
-    var c = k.k === 'ent' ? 'a-ok' : k.k === 'ref' ? 'a-ref' : k.k === 'pend' ? 'a-warn' : '';
+    var c = k.k === 'ent' ? 'a-ok' : k.k === 'ref' ? 'a-ref' : k.k === 'pend' ? 'a-warn' : k.k === 'debe' ? 'a-debe' : '';
     return '<div class="aviso ' + c + '" style="' + (c ? '' : 'background:#f1ede7') + '"><b>' + esc(k.t) + '</b>' + esc(k.d || '') + '</div>';
   }
   function botonesKit(q) {
@@ -604,10 +609,13 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
   function kitCard(p) {
     var k = kit(p), e = est(p), h = '<h2>Kit</h2>', puede = acreditado(p) || rol === 'ctl';
     var otros = familia(p).filter(function (q) { return acreditado(q) && pendienteKit(q); });
-    if (k.k === 'pend' && !puede) {
-      h += avisoKit(k) + '<div class="mut" style="margin-top:6px">Después de acreditar, entregáselo o dejalo con su referente.</div>';
+    if ((k.k === 'pend' || k.k === 'debe') && !puede) {
+      h += avisoKit(k) + '<div class="mut" style="margin-top:6px">' + (k.k === 'debe' ? 'Después de acreditar, si lo paga, registrá el pago y entregáselo.' : 'Después de acreditar, entregáselo o dejalo con su referente.') + '</div>';
     } else if (k.k === 'pend') {
       h += avisoKit(k) + '<div class="mut" style="margin-top:10px">¿Qué pasa con su kit?</div><div class="kbtns">' + botonesKit(p) + '</div>';
+      if (e[4] && p.kit !== 'P') h += '<button class="gris" id="bDespagar">' + (confDesh === 'pag' ? 'Tocá otra vez para deshacer' : 'Deshacer pago') + '</button>';
+    } else if (k.k === 'debe') {
+      h += avisoKit(k) + '<button class="rojo" id="bPagar">Pagó el kit: registrar pago en efectivo</button><div class="mut" style="margin-top:6px">Si no lo paga ahora, tocá “Dejar pendiente”: puede pagarlo más tarde.</div>';
     } else {
       h += avisoKit(k);
       if (k.k === 'ref') h += '<button class="ok" data-kent="' + esc(p.id) + '">Ya lo recibió: marcar entregado</button><button class="gris" id="bDesref">' + (confDesh === 'ref' ? 'Tocá otra vez para deshacer' : 'Deshacer') + '</button>';
@@ -615,12 +623,12 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
     }
     if (otros.length) {
       h += '<div class="mut" style="margin-top:12px">Kits pendientes de su familia:</div>';
-      otros.forEach(function (q) { h += '<div class="kitfila"><div class="q"><b>' + esc(q.nom.split(' ')[0] + ' ' + q.ap) + '</b><div class="mut">' + esc(kit(q).d || '') + '</div></div>' + botonesKit(q) + '</div>'; });
+      otros.forEach(function (q) { var kq = kit(q); h += '<div class="kitfila"><div class="q"><b>' + esc(q.nom.split(' ')[0] + ' ' + q.ap) + '</b><div class="mut">' + esc(kq.k === 'debe' ? kq.t : (kq.d || '')) + '</div></div>' + (kq.k === 'debe' ? '<button class="chico sec" data-ir="' + esc(q.id) + '">Ver</button>' : botonesKit(q)) + '</div>'; });
     }
     if (admin && (k.k === 'sin' || k.k === 'no')) h += '<button class="sec" id="bHabilitar">Tiene kit con su nombre (excepción)</button>';
     if (admin && k.exc) h += '<button class="gris" id="bDeshabilitar">Quitar la excepción</button>';
     if (rol === 'acr' && acreditado(p)) {
-      var quedan = (k.k === 'pend' ? 1 : 0) + otros.length;
+      var quedan = (pendienteKit(p) ? 1 : 0) + otros.length;
       h += '<button class="' + (quedan ? 'gris' : 'sec') + '" id="bListo">' + (quedan ? 'Dejar pendiente · siguiente' : 'Listo · siguiente') + '</button>';
     }
     return h;
@@ -672,9 +680,10 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
         '<div class="barras-x">' + lab.map(function (l, i) { return '<span>' + (i % 2 === 0 ? l : '') + '</span>'; }).join('') + '</div><div class="mut">Máximo: ' + mx + ' en 15 minutos.</div></div>';
     }
     // kits
-    var KC = P.filter(tieneKit), kn = { ent: 0, ref: 0, pend: 0 }, kaqui = 0;
-    KC.forEach(function (p) { var k = kit(p).k; kn[k]++; if (k === 'pend' && acreditado(p)) kaqui++; });
-    h += '<div class="card"><h2>Kits (' + KC.length + ' con nombre)</h2><div class="grid3"><div class="kpi"><b>' + kn.ent + '</b><span>entregados</span></div><div class="kpi"><b>' + kn.ref + '</b><span>con su referente</span></div><div class="kpi"><b>' + kn.pend + '</b><span>pendientes</span></div></div>' +
+    var KC = P.filter(conKit), kn = { ent: 0, ref: 0, pend: 0, debe: 0 }, kaqui = 0, kpag = P.filter(function (p) { return est(p)[4]; }).length;
+    KC.forEach(function (p) { var k = kit(p).k; kn[k]++; if ((k === 'pend' || k === 'debe') && acreditado(p)) kaqui++; });
+    h += '<div class="card"><h2>Kits (' + KC.length + ' con nombre)</h2><div class="grid3"><div class="kpi"><b>' + kn.ent + '</b><span>entregados</span></div><div class="kpi"><b>' + kn.ref + '</b><span>con su referente</span></div><div class="kpi"><b>' + (kn.pend + kn.debe) + '</b><span>pendientes</span></div></div>' +
+      '<div class="mut" style="margin-top:8px">De los pendientes, <b>' + kn.debe + '</b> están reservados sin pagar. Pagados hoy en el lugar: <b>' + kpag + '</b>.</div>' +
       '<div class="mut" style="margin-top:8px">' + (kaqui ? '<b>' + kaqui + '</b> de los pendientes ya están acreditados (llegaron y todavía no tienen su kit). ' : '') + 'El detalle por parroquia está en <b>Kits</b>.</div></div>';
     // ramas
     var ramas = {};
@@ -758,13 +767,14 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
     }
     if (t.getAttribute('data-kent')) { accion('entregar', [t.getAttribute('data-kent')], { talle: (byId[t.getAttribute('data-kent')] || {}).talle || '' }); return; }
     if (t.getAttribute('data-kref')) { accion('derivar', [t.getAttribute('data-kref')]); return; }
+    if (id === 'bPagar') { accion('pagar', [p.id]); return; }
     if (id === 'bHabilitar') { accion('habilitar', [p.id]); return; }
     if (id === 'bDeshabilitar') { accion('deshabilitar', [p.id]); return; }
     if (id === 'bListo') { $('q').value = ''; ver('vHome'); $('q').focus(); return; }
     if (id === 'bCambiarResp') { editResp = true; respSel = (confirmados(p) || []).slice(); pintarFicha(); return; }
     if (id === 'bCancResp') { editResp = false; respSel = []; pintarFicha(); return; }
     if (id === 'bConfResp') { if (!respSel.length) return; accion('responsables', [p.id], { resp: respSel.slice(0, 2) }); editResp = false; respSel = []; pintarFicha(); return; }
-    var deshacer = { bDesAcr: ['acr', 'desacreditar'], bDesref: ['ref', 'desderivar'], bDesent: ['ent', 'desentregar'] }[id];
+    var deshacer = { bDesAcr: ['acr', 'desacreditar'], bDesref: ['ref', 'desderivar'], bDesent: ['ent', 'desentregar'], bDespagar: ['pag', 'despagar'] }[id];
     if (deshacer) {
       if (confDesh !== deshacer[0]) { confDesh = deshacer[0]; pintarFicha(); return; }
       confDesh = ''; accion(deshacer[1], [p.id]);
