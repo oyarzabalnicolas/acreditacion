@@ -341,7 +341,16 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
     if (!cfg.fechaTope) return true;
     return String(p.marca).slice(0, 10) <= cfg.fechaTope;
   }
-  function grupoDe(p) { return p.parroquia || p.ciudad || 'su grupo'; }
+  /* grupo de la bolsa de kits: localidad para los que vienen de lejos, parroquia para Buenos Aires */
+  var GRUPOS = [[/salta|cafayate/, 'Salta'], [/rosario/, 'Rosario'], [/santa fe/, 'Santa Fe · San José'], [/fatima|mar del plata|balcarce/, 'Mar del Plata · Ntra. Sra. de Fátima'],
+    [/catamarca|candelaria/, 'Catamarca · Santa María'], [/consolacion/, 'Ntra. Sra. de la Consolación'], [/asuncion/, 'La Asunción y San Andrés · San Martín'], [/senora de lujan|sra de lujan/, 'Ntra. Sra. de Luján · San Martín'],
+    [/villa maipu|ballester/, 'San José · Villa Maipú'], [/martin de tours/, 'San Martín de Tours'], [/agustin/, 'San Agustín · Buenos Aires'], [/buen consejo/, 'Colegio Madre del Buen Consejo'], [/santo cristo|lanus/, 'Santo Cristo · Lanús']];
+  function grupoDe(p) {
+    if (p.grupo) return p.grupo;
+    var t = norm([p.parroquia, p.ciudad, p.prov].join(' ')), g = '';
+    for (var i = 0; i < GRUPOS.length && !g; i++) if (GRUPOS[i][0].test(t)) g = GRUPOS[i][1];
+    return (p.grupo = g || p.parroquia || p.ciudad || 'Sin grupo');
+  }
   function tieneKit(p) { var e = est(p); return p.kit === 'P' || !!e[13] || !!e[4]; }
   function kit(p) {
     var e = est(p);
@@ -444,14 +453,15 @@ nav button svg { display:block; margin:0 auto 2px; width:22px; height:22px; }
     $('kEspInfo').innerHTML = C.length + ' kits con nombre · <b>' + cnt.ent + '</b> entregados · <b>' + cnt.ref + '</b> con su referente · <b>' + cnt.pend + '</b> pendientes' + (aqui ? ' (<b>' + aqui + '</b> ya acreditados)' : '') + '.';
     var G = {};
     C.forEach(function (p) { var g = grupoDe(p); (G[g] = G[g] || []).push(p); });
-    var gs = Object.keys(G).filter(function (g) { return !q || norm(g).indexOf(q) >= 0 || G[g].some(function (p) { return p.q.indexOf(q) >= 0; }); });
+    var mq = function (p) { return p.q.indexOf(q) >= 0 || norm(p.parroquia + ' ' + p.ciudad).indexOf(q) >= 0; };
+    var gs = Object.keys(G).filter(function (g) { return !q || norm(g).indexOf(q) >= 0 || G[g].some(mq); });
     var pend = function (g) { return G[g].filter(function (p) { return kit(p).k === 'pend'; }).length; };
     gs.sort(function (a, b) { return (pend(b) - pend(a)) || a.localeCompare(b); });
     var h = gs.map(function (g) {
       var L = G[g].slice().sort(function (a, b) { return a.q.localeCompare(b.q); }), n = { ent: 0, ref: 0, pend: 0 };
       L.forEach(function (p) { n[kit(p).k]++; });
       var V = kfiltro === 'pend' ? L.filter(function (p) { return kit(p).k === 'pend'; }) : L;
-      if (q && norm(g).indexOf(q) < 0) V = V.filter(function (p) { return p.q.indexOf(q) >= 0; });
+      if (q && norm(g).indexOf(q) < 0) V = V.filter(mq);
       if (kfiltro === 'pend' && !V.length && !q) return '';
       return '<div class="card res"><h2 style="margin-bottom:2px">' + esc(g) + '</h2><div class="mut" style="margin-bottom:6px">' + L.length + ' kits · ' + n.ent + ' entregados · ' + n.ref + ' con referente · <b>' + n.pend + ' pendientes</b></div>' +
         (V.map(function (p) {
